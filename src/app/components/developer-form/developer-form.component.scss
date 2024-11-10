@@ -1,0 +1,89 @@
+.form__wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .form__content {
+    display: flex;
+    flex-direction: column;
+    padding: 0 0 24px;
+
+    .form__stepContainer {
+      display: flex;
+      position: relative;
+      flex-direction: column;
+      width: fit-content;
+    }
+  }
+
+  .form__bottomNavigation {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    column-gap: 8px;
+
+    .form__submitButton {
+      margin-top: 24px;
+      width: 100%;
+    }
+
+    .form__handleStepButton {
+      width: 100%;
+    }
+  }
+}
+
+.form__fieldGroup {
+    display: flex !important;
+    position: relative;
+    flex-direction: column;
+    width: fit-content;
+
+  .form__fieldContent {
+    .form__fieldLabel {}
+    .form__fieldInput {}
+    .form__fieldHint {}
+  }
+}
+
+.form__quickAuth__github {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 24px;
+  margin: 0 auto 24px;
+}
+
+.form__authAlternativeLabel {
+  display: inline-flex;
+  width: fit-content;
+  font-size: 14px;
+}
+
+.form__imageUploadContainer {
+  display: flex;
+  flex-direction: column;
+
+  .form__imagePreviewContainer {
+    position: relative;
+    display: block;
+    max-width: 100%;
+    height: fit-content;
+    width: fit-content;
+    margin: 0 auto;
+
+    .form__avatarPreview {
+      position: relative;
+      max-width: 100%;
+      max-height: 120px;
+    }
+  }
+}
+
+.form__sideInputsContainer {
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+}

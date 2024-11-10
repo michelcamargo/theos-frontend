@@ -1,0 +1,23 @@
+<div class="form__stepContainer">
+  <div class="form__quickAuth__github">
+    <app-github-auth></app-github-auth>
+    <span class="form__authAlternativeLabel">Ou preencha o campos abaixo:</span>
+  </div>
+
+  <div class="form__fieldGroup" [formGroup]="formRef">
+    <mat-form-field class="form__fieldContent" appearance="fill">
+      <mat-label class="form__fieldLabel">Nome</mat-label>
+      <input class="form__fieldInput" matInput formControlName="name">
+    </mat-form-field>
+
+    <mat-form-field class="form__fieldContent" appearance="fill">
+      <mat-label class="form__fieldLabel">Email</mat-label>
+      <input class="form__fieldInput" matInput type="email" formControlName="email">
+    </mat-form-field>
+
+    <mat-form-field class="form__fieldContent" appearance="fill">
+      <mat-label class="form__fieldLabel">Cidade</mat-label>
+      <input class="form__fieldInput" matInput formControlName="city">
+    </mat-form-field>
+  </div>
+</div>

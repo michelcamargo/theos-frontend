@@ -1,0 +1,16 @@
+.main-content {
+  max-width: 1130px;
+  margin: 0 auto;
+
+  .main-content__heading {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    .main-content__headingText {}
+  }
+  .main-content__wrapper {
+    .main-content__session {}
+  }
+}

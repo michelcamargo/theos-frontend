@@ -1,0 +1,18 @@
+<div class="main-content container">
+  <div class="main-content__heading">
+    <h2 class="main-content__headingText">
+      Cadastro DEV
+    </h2>
+    <button mat-raised-button color="primary" (click)="openUserFormDialog()">
+      Cadastrar Desenvolvedor
+    </button>
+  </div>
+  <div class="main-content__session">
+    <h5>Filtro</h5>
+    <app-developer-filter (filterChanged)="onFilterChanged($event)"></app-developer-filter>
+  </div>
+  <div class="main-content__session">
+    <h5>Lista</h5>
+    <app-developer-list [userList]="filteredUsers"></app-developer-list>
+  </div>
+</div>

@@ -1,0 +1,34 @@
+<mat-card class="form__wrapper">
+  <h3 class="form__heading">Cadastro de desenvolvedor</h3>
+  <form class="form__content" [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <div class="form__stepContainer">
+      <form-step-personal *ngIf="currentStep === 0" [formRef]="userForm"></form-step-personal>
+      <form-step-github *ngIf="currentStep === 1" [formRef]="userForm"></form-step-github>
+      <form-step-experience *ngIf="currentStep === 2" [formRef]="userForm"></form-step-experience>
+    </div>
+    <div class="form__bottomNavigation">
+      <button
+        *ngIf="currentStep === 0"
+        class="form__handleStepButton form__previousStepButton" mat-raised-button color="primary" type="button"
+        (click)="closeForm()"
+      >
+        Fechar
+      </button>
+      <button *ngIf="currentStep !== 0"
+        class="form__handleStepButton form__previousStepButton" mat-raised-button color="primary" type="button"
+        (click)="changeStepHandler(-1)"
+      >
+        Voltar
+      </button>
+      <button
+        class="form__handleStepButton form__nextStepButton" mat-raised-button color="primary" type="button"
+        (click)="changeStepHandler(1)" [disabled]="currentStep === steps.length - 1"
+      >
+        Avançar
+      </button>
+<!--      <button class="form__submitButton" mat-raised-button color="primary" type="submit">-->
+<!--        Cadastrar-->
+<!--      </button>-->
+    </div>
+  </form>
+</mat-card>

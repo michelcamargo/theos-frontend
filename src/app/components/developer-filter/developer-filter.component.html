@@ -1,0 +1,16 @@
+<div>
+  <mat-form-field>
+    <mat-label>Tecnologias</mat-label>
+    <input matInput [(ngModel)]="skillsInput" (ngModelChange)="onFilterChange()" placeholder="Ex: Angular, Vue, React">
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Formação</mat-label>
+    <input matInput [(ngModel)]="education" (ngModelChange)="onFilterChange()" placeholder="Ex: Ciência da Computação">
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Cidade</mat-label>
+    <input matInput [(ngModel)]="city" (ngModelChange)="onFilterChange()" placeholder="Ex: São Paulo">
+  </mat-form-field>
+</div>

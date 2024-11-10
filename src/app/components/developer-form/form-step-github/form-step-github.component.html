@@ -1,0 +1,88 @@
+<div class="form__fieldGroup" [formGroup]="formRef">
+  <mat-form-field class="form__fieldContent" appearance="fill">
+    <mat-label class="form__fieldLabel">Usuário GitHub</mat-label>
+    <input class="form__fieldInput" matInput formControlName="githubUsername">
+  </mat-form-field>
+
+  <div class="form__imageUploadContainer">
+    <div *ngIf="imagePreview" class="form__imagePreviewContainer">
+      <img class="form__avatarPreview" [src]="imagePreview" alt="Pré-visualização da imagem" fill />
+    </div>
+
+    <div class="form__sideInputsContainer">
+<!--      <div class="form__imageUploadLocal">-->
+<!--&lt;!&ndash;        <mat-form-field class="form__fieldContent" appearance="fill">&ndash;&gt;-->
+<!--          <input-->
+<!--            class="form__fieldInput form__fieldInput__file"-->
+<!--            type="file"-->
+<!--            (change)="onFileSelected($event)"-->
+<!--            accept="image/*"-->
+<!--            hidden-->
+<!--            #fileInput-->
+<!--          >-->
+<!--          <button-->
+<!--            *ngIf="!imagePreview"-->
+<!--            class="form__fieldTrigger form__addAvatarButton"-->
+<!--            mat-raised-button-->
+<!--            (click)="fileInput.click()"-->
+<!--          >-->
+<!--            Carregar Imagem-->
+<!--          </button>-->
+<!--          <button-->
+<!--            *ngIf="imagePreview"-->
+<!--            class="form__fieldTrigger form__removeAvatarButton"-->
+<!--            mat-raised-button-->
+<!--            (click)="onFileSelected(null)"-->
+<!--          >-->
+<!--            Remover imagem-->
+<!--          </button>-->
+<!--&lt;!&ndash;          <mat-error *ngIf="formRef.get('avatarUrl')?.hasError('invalidBase64Image')">&ndash;&gt;-->
+<!--&lt;!&ndash;            A URL da imagem não é válida. Por favor, forneça uma URL base64 válida.&ndash;&gt;-->
+<!--&lt;!&ndash;          </mat-error>&ndash;&gt;-->
+<!--&lt;!&ndash;        </mat-form-field>&ndash;&gt;-->
+<!--      </div>-->
+
+      <mat-form-field class="form__fieldContent" appearance="fill">
+<!--        <div class="form__imageUploadLocal">-->
+<!--&lt;!&ndash;        <mat-form-field class="form__fieldContent" appearance="fill">&ndash;&gt;-->
+<!--          <input-->
+<!--            class="form__fieldInput form__fieldInput__file"-->
+<!--            type="file"-->
+<!--            (change)="onFileSelected($event)"-->
+<!--            accept="image/*"-->
+<!--            hidden-->
+<!--            #fileInput-->
+<!--          >-->
+<!--          <button-->
+<!--            *ngIf="!imagePreview"-->
+<!--            formControlName="avatarUploadImage"-->
+<!--            class="form__fieldTrigger form__addAvatarButton"-->
+<!--            mat-raised-button-->
+<!--            (click)="fileInput.click()"-->
+<!--          >-->
+<!--            Carregar Imagem-->
+<!--          </button>-->
+<!--          <button-->
+<!--            *ngIf="imagePreview"-->
+<!--            class="form__fieldTrigger form__removeAvatarButton"-->
+<!--            mat-raised-button-->
+<!--            (click)="onFileSelected(null)"-->
+<!--          >-->
+<!--            Remover imagem-->
+<!--          </button>-->
+<!--&lt;!&ndash;          <mat-error *ngIf="formRef.get('avatarUrl')?.hasError('invalidBase64Image')">&ndash;&gt;-->
+<!--&lt;!&ndash;            A URL da imagem não é válida. Por favor, forneça uma URL base64 válida.&ndash;&gt;-->
+<!--&lt;!&ndash;          </mat-error>&ndash;&gt;-->
+<!--&lt;!&ndash;        </mat-form-field>&ndash;&gt;-->
+<!--        </div>-->
+        <mat-label class="form__fieldLabel">Avatar (URL)</mat-label>
+        <input
+          class="form__fieldInput"
+          matInput
+          formControlName="avatarUrl"
+          (input)="onUrlChange($event)"
+        >
+      </mat-form-field>
+    </div>
+  </div>
+</div>

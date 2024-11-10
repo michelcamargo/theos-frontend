@@ -1,0 +1,19 @@
+<div  class="form__stepWrapper">
+  <div class="form__stepHeading">
+    <div><span>Nome:</span><span>{{'Michel Camargo'}}</span></div>
+    <div><span>Email:</span><span>{{'michelcamargo@outlook.com'}}</span></div>
+  </div>
+
+  <div class="form__fieldGroup" [formGroup]="formRef">
+    <mat-form-field class="form__fieldContent" appearance="fill">
+      <mat-label class="form__fieldLabel">Formação</mat-label>
+      <input class="form__fieldInput" matInput formControlName="education">
+    </mat-form-field>
+
+    <mat-form-field class="form__fieldContent" appearance="fill">
+      <mat-label class="form__fieldLabel">Tecnologias</mat-label>
+      <input class="form__fieldInput" matInput formControlName="skills">
+      <mat-hint class="form__fieldHint">ex: HTML/CSS, Vue, Angular etc.</mat-hint>
+    </mat-form-field>
+  </div>
+</div>
