@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CustomUser } from './models/custom-user.model';
 import { UsersService } from './services/users.service';
-import {ActivatedRoute, RouterOutlet} from '@angular/router';
+import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { DeveloperFormComponent } from './components/developer-form/developer-form.component';
 import { DeveloperFilterComponent } from './components/developer-filter/developer-filter.component';
 import { DeveloperListComponent } from './components/developer-list/developer-list.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatButton } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import {Observable, of, Subscription} from 'rxjs';
-import {AuthService} from './services/auth.service';
+import { Observable, of } from 'rxjs';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
