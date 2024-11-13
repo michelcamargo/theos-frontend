@@ -2,7 +2,14 @@
   <h3 class="form__heading">Cadastro de desenvolvedor</h3>
   <form class="form__content" [formGroup]="userForm" (ngSubmit)="onSubmit()">
     <div class="form__stepContainer">
-      <form-step-personal *ngIf="currentStep === 0" [formRef]="userForm" [partialProfile]="inheritAuthInfo"></form-step-personal>
+      <form-step-personal *ngIf="currentStep === 0"
+        [formRef]="userForm"
+        [autoCompleteSetup]="setupAutoComplete.bind(this)"
+        [filteredUsers]="filteredUsers"
+        [isDebouncing]="isDebouncing"
+        [partialProfile]="inheritAuthInfo"
+        (loadNextPage)="loadNextPage()"
+      />
       <form-step-github *ngIf="currentStep === 1" [formRef]="userForm"></form-step-github>
       <form-step-experience *ngIf="currentStep === 2" [formRef]="userForm"></form-step-experience>
     </div>
@@ -20,9 +27,10 @@
       >
         Voltar
       </button>
-      <button
+      <button *ngIf="currentStep !== steps.length - 1"
         class="form__handleStepButton form__nextStepButton" mat-raised-button color="primary" type="button"
-        (click)="changeStepHandler(1)" [disabled]="currentStep === steps.length - 1"
+        (click)="changeStepHandler(1)"
+        [disabled]="!isStepValid()"
       >
         Avançar
       </button>

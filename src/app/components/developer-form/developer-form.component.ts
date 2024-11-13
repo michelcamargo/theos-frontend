@@ -14,6 +14,8 @@ import { NgComponentOutlet, NgIf } from '@angular/common';
 import { UsersService } from '../../services/users.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 
+type FieldAutocompleteIndex = { field: string, page: number };
+
 @Component({
   selector: 'app-developer-form',
   standalone: true,
@@ -39,10 +41,13 @@ export class DeveloperFormComponent implements OnInit {
 
   userForm: FormGroup;
   inheritAuthInfo?: Partial<CustomUser>;
-  userInfo: any;
-  error: string | null = null;
   userList: CustomUser[] = [];
   currentStep: number;
+  filteredUsers: any[] = [];
+  autoCompleteIndexes: FieldAutocompleteIndex[] = [
+    { field: 'name', page: 1 },
+  ];
+  isDebouncing: boolean = false;
   steps = [
     {
       groupName: 'personal',
@@ -60,7 +65,6 @@ export class DeveloperFormComponent implements OnInit {
       fields: ['education', 'skills'],
     },
   ];
-  isDebouncing: boolean = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { partialProfile?: Partial<CustomUser> },
@@ -70,26 +74,31 @@ export class DeveloperFormComponent implements OnInit {
     private alert: MatSnackBar,
   ) {
     const { partialProfile } = data;
+
     if (partialProfile) { this.inheritAuthInfo = partialProfile }
 
     this.currentStep = 0;
     this.userForm = this.form.group({
-      name: [partialProfile?.name ?? '', Validators.required],
-      email: [partialProfile?.email ?? '', [Validators.required, Validators.email]],
-      githubUsername: [partialProfile?.githubUsername ?? '', Validators.required],
-      githubUrl: [partialProfile?.githubUrl ?? '', Validators.required],
-      avatarUrl: [partialProfile?.avatarUrl ?? '', [Validators.required]],
+      name: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      githubUsername: ['', Validators.required],
+      githubUrl: ['', Validators.required],
+      avatarUrl: ['', [Validators.required]],
       city: [''],
       education: [''],
       skills: ['']
     });
   }
 
-  setupAutoComplete(inputName: string, _debounceTime = 2000) {
-    const inputControl = this.userForm.get(inputName);
+  isStepValid(): boolean {
+    return this.steps[this.currentStep].fields.every(field => this.userForm.get(field)?.valid);
+  }
+
+  setupAutoComplete(field: string, _debounceTime = 2000) {
+    const inputControl = this.userForm.get(field);
 
     if (!inputControl) {
-      console.warn(`Auto-complete: campo "${inputName}" não encontrado.`);
+      console.warn(`Auto-complete: campo "${field}" não encontrado.`);
       return;
     }
 
@@ -99,8 +108,10 @@ export class DeveloperFormComponent implements OnInit {
     ).subscribe(name => {
       this.isDebouncing = true;
 
+      const autocompleteInfo = this.autoCompleteIndexes.find(item => item.field === field)
+
       if (name) {
-        this.usersService.getUserByFullname(name).subscribe({
+        this.usersService.getUserByFullname(name, autocompleteInfo?.page ?? 1).subscribe({
           next: (user) => {
             if (!user) {
               console.log('> not found by name')
@@ -109,12 +120,9 @@ export class DeveloperFormComponent implements OnInit {
 
               // this.userForm.get('');
               console.log('Usuário encontrado:', user);
-
-              this.userInfo = user;
-              this.error = null;
           },
           error: (error) => {
-            console.warn('Falha ao buscar autocompletar do formulário.', error);
+            console.warn(`Falha ao autocompletar do campo ${field}.`, error);
           },
           complete: () => {
             this.isDebouncing = false;
@@ -124,39 +132,21 @@ export class DeveloperFormComponent implements OnInit {
     });
   }
 
-  // setPartialFormInfo() {
-  //   console.log({ partialProfile: this.partialProfile });
-  //
-  //   if (!this.partialProfile) return;
-  //
-  //   Object.keys(this.partialProfile).forEach(key => {
-  //     const formInputControl = this.userForm.get(key);
-  //
-  //     if (
-  //       formInputControl &&
-  //       this.partialProfile &&
-  //       this.partialProfile[key as keyof CustomUser] !== undefined
-  //     ) {
-  //       console.log({
-  //         profileKey: key,
-  //         profileValue: this.partialProfile[key as keyof CustomUser]
-  //       });
-  //       formInputControl.setValue(this.partialProfile[key as keyof CustomUser]);
-  //     } else {
-  //       console.log(`não tem ${key} no partialProfile`);
-  //     }
-  //   });
-  // }
-
-
-
   ngOnInit() {
     this.setupAutoComplete('name');
-    // this.setPartialFormInfo();
+    if (this.inheritAuthInfo) {
+      this.userForm.patchValue(this.inheritAuthInfo);
+      this.validateCurrentStep();
+    }
   }
 
-  githubAccountLoginHandler() {
-
+  validateCurrentStep() {
+    this.steps[this.currentStep].fields.forEach(field => {
+      const control = this.userForm.get(field);
+      if (control && control.invalid) {
+        control.markAsTouched();
+      }
+    });
   }
 
   changeStepHandler(step: number) {
@@ -186,6 +176,14 @@ export class DeveloperFormComponent implements OnInit {
     this.dialog.closeAll();
   }
 
+  loadNextPage(field: string = 'name') {
+    const autocompleteInfo = this.autoCompleteIndexes.find(item => item.field === field)\
+    if (autocompleteInfo) {
+      autocompleteInfo.page++;
+      this.setupAutoComplete(field);
+    }
+  }
+
   onSubmit() {
     console.log({ form: this.userForm, valid: this.userForm.valid, error: this.userForm.errors })
 
@@ -197,9 +195,10 @@ export class DeveloperFormComponent implements OnInit {
       };
 
       this.userList.push(incomingUser);
+      this.developerAdded.emit(incomingUser);
 
       this.alert.open('Usuário cadastrado com sucesso!', 'Fechar', {
-        duration: 3000,
+        duration: 2000,
         panelClass: ['success-snackbar']
       });
 

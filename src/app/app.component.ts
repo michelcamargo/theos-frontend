@@ -64,7 +64,6 @@ export class AppComponent implements OnInit {
       }
 
       dialogRef.close();
-      this.loadUsers();
     });
   }
 
@@ -74,13 +73,12 @@ export class AppComponent implements OnInit {
       if (code) {
         this.authService.getAuthUser(code).subscribe({
           next: (authUser) => {
-            console.log({ authUser });
             this.showSuccess('Autenticado');
             this.authenticatedUser = authUser;
           },
           error: (error) => {
-            console.error('Erro ao obter usuário autenticado:', error);
-            this.showError('Token inválido, faça login novamente.');
+            console.error('Falha em autenticação: ', error);
+            this.showError('Falha ao autenticar-se, tente novamente.');
           },
           complete: () => {
             const url = new URL(window.location.href);
@@ -95,14 +93,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.runQueryParamAuthentication();
-    this.loadUsers();
-  }
-
-  loadUsers() {
-    this.userList = this.usersService.getUsers();
-    this.userList.subscribe((users: CustomUser[]) => {
-      this.filteredUsers = [...users];
-    });
   }
 
   onFilterChanged(filter: { skills?: string[]; city?: string; education?: string }): void {
