@@ -12,8 +12,12 @@ export class UsersService {
 
   constructor(private http: HttpClient) {}
 
+  getUserByFullname(searchReference: string): Observable<CustomUser[]> {
+    return this.http.get<CustomUser[]>(`${this.apiUrl}/users/search?fullname=${searchReference}`);
+  }
+
   getUserInfo(searchReference: string): Observable<CustomUser[]> {
-    return this.http.get<CustomUser[]>(`${this.apiUrl}/users/${searchReference}`);
+    return this.http.get<CustomUser[]>(`${this.apiUrl}/users/search?username=${searchReference}`);
   }
 
   getUsers(): Observable<CustomUser[]> {

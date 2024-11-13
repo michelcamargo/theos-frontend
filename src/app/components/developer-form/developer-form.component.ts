@@ -1,20 +1,18 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CustomUser } from '../../models/custom-user.model';
 import { MatFormField, MatHint, MatLabel } from '@angular/material/form-field';
 import { MatCard } from '@angular/material/card';
 import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
-import { MatDialog } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { FormStepGithubComponent } from './form-step-github/form-step-github.component';
 import { FormStepPersonalComponent } from './form-step-personal/form-step-personal.component';
 import { FormStepExperienceComponent } from './form-step-experience/form-step-experience.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NgComponentOutlet, NgIf } from '@angular/common';
 import { UsersService } from '../../services/users.service';
-// import { base64ImageValidator } from '../../helpers/validators.helper';
-import { catchError, debounceTime, of, switchMap } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-developer-form',
@@ -38,7 +36,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class DeveloperFormComponent implements OnInit {
   @Output() developerAdded = new EventEmitter<CustomUser>();
+
   userForm: FormGroup;
+  inheritAuthInfo?: Partial<CustomUser>;
   userInfo: any;
   error: string | null = null;
   userList: CustomUser[] = [];
@@ -60,73 +60,99 @@ export class DeveloperFormComponent implements OnInit {
       fields: ['education', 'skills'],
     },
   ];
-
-  githubUsernameControl = new FormControl('', [Validators.required]);
+  isDebouncing: boolean = false;
 
   constructor(
+    @Inject(MAT_DIALOG_DATA) public data: { partialProfile?: Partial<CustomUser> },
     private form: FormBuilder,
     private usersService: UsersService,
     private dialog: MatDialog,
     private alert: MatSnackBar,
   ) {
+    const { partialProfile } = data;
+    if (partialProfile) { this.inheritAuthInfo = partialProfile }
+
     this.currentStep = 0;
     this.userForm = this.form.group({
-      name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      githubUsername: ['', Validators.required],
-      githubUrl: ['', Validators.required],
-      avatarUrl: ['', [Validators.required]],
-      // avatarUploadImage: [base64ImageValidator],
+      name: [partialProfile?.name ?? '', Validators.required],
+      email: [partialProfile?.email ?? '', [Validators.required, Validators.email]],
+      githubUsername: [partialProfile?.githubUsername ?? '', Validators.required],
+      githubUrl: [partialProfile?.githubUrl ?? '', Validators.required],
+      avatarUrl: [partialProfile?.avatarUrl ?? '', [Validators.required]],
       city: [''],
       education: [''],
       skills: ['']
     });
   }
 
-  fetchGithubData() {
-    this.githubUsernameControl.valueChanges.pipe(
-      debounceTime(2000),
-      switchMap((username) => {
-        if (username) {
-          return this.usersService.getUserInfo(username).pipe(
-            catchError((error: HttpErrorResponse) => {
-              this.error = 'Usuário não encontrado ou erro na requisição';
-              return of(null);
-            })
-          );
-        }
-        return of(null);
-      })
-    ).subscribe((data) => {
-      if (data) {
-        this.userInfo = data;
-        this.error = null;
+  setupAutoComplete(inputName: string, _debounceTime = 2000) {
+    const inputControl = this.userForm.get(inputName);
+
+    if (!inputControl) {
+      console.warn(`Auto-complete: campo "${inputName}" não encontrado.`);
+      return;
+    }
+
+    inputControl.valueChanges.pipe(
+      debounceTime(_debounceTime),
+      distinctUntilChanged()
+    ).subscribe(name => {
+      this.isDebouncing = true;
+
+      if (name) {
+        this.usersService.getUserByFullname(name).subscribe({
+          next: (user) => {
+            if (!user) {
+              console.log('> not found by name')
+              return;
+            }
+
+              // this.userForm.get('');
+              console.log('Usuário encontrado:', user);
+
+              this.userInfo = user;
+              this.error = null;
+          },
+          error: (error) => {
+            console.warn('Falha ao buscar autocompletar do formulário.', error);
+          },
+          complete: () => {
+            this.isDebouncing = false;
+          }
+        });
       }
     });
-
-  //   const username = this.userForm.get('githubUsername')?.value;
-  //   if (username) {
-  //     this.usersService.getUserInfo(username).subscribe({
-  //       next: (data) => {
-  //         this.userForm.patchValue({
-  //           name: data.name,
-  //           avatarUrl: data.avatar_url,
-  //           githubUrl: data.html_url
-  //         });
-  //       },
-  //       error: (err) => {
-  //         console.error('Erro ao buscar dados do GitHub:', err);
-  //         this.alert.open('Usuário não encontrado. Verifique o nome de usuário.', 'Fechar', {
-  //           duration: 3000,
-  //           panelClass: ['error-snackbar']
-  //         });
-  //       }
-  //     });
-  //   }
   }
 
+  // setPartialFormInfo() {
+  //   console.log({ partialProfile: this.partialProfile });
+  //
+  //   if (!this.partialProfile) return;
+  //
+  //   Object.keys(this.partialProfile).forEach(key => {
+  //     const formInputControl = this.userForm.get(key);
+  //
+  //     if (
+  //       formInputControl &&
+  //       this.partialProfile &&
+  //       this.partialProfile[key as keyof CustomUser] !== undefined
+  //     ) {
+  //       console.log({
+  //         profileKey: key,
+  //         profileValue: this.partialProfile[key as keyof CustomUser]
+  //       });
+  //       formInputControl.setValue(this.partialProfile[key as keyof CustomUser]);
+  //     } else {
+  //       console.log(`não tem ${key} no partialProfile`);
+  //     }
+  //   });
+  // }
+
+
+
   ngOnInit() {
-    this.fetchGithubData();
+    this.setupAutoComplete('name');
+    // this.setPartialFormInfo();
   }
 
   githubAccountLoginHandler() {
@@ -161,17 +187,22 @@ export class DeveloperFormComponent implements OnInit {
   }
 
   onSubmit() {
+    console.log({ form: this.userForm, valid: this.userForm.valid, error: this.userForm.errors })
+
     if (this.userForm.valid) {
       const formData = this.userForm.value;
       const incomingUser: CustomUser = {
         ...formData,
         skills: formData.skills.split(',').map((skill: string) => skill.trim())
       };
+
       this.userList.push(incomingUser);
+
       this.alert.open('Usuário cadastrado com sucesso!', 'Fechar', {
         duration: 3000,
         panelClass: ['success-snackbar']
       });
+
       this.userForm.reset();
     } else {
       this.alert.open('Campos obrigatórios não preenchidos.', 'Fechar', {

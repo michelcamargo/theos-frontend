@@ -19,8 +19,9 @@ import {AuthService} from './services/auth.service';
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
-  userList: Observable<CustomUser[]>=  of([]);
+  userList: Observable<CustomUser[]> = of([]);
   filteredUsers: CustomUser[] = [];
+  authenticatedUser?: CustomUser = undefined;
 
   constructor(
     private route: ActivatedRoute,
@@ -34,22 +35,34 @@ export class AppComponent implements OnInit {
     this.snackBar.open(message, 'Fechar', {
       duration: 3000,
       panelClass: ['error-snackbar'],
-      verticalPosition: 'bottom',
+      verticalPosition: 'top',
+      horizontalPosition: 'right'
+    });
+  }
+
+  showSuccess(message: string) {
+    this.snackBar.open(message, 'Fechar', {
+      duration: 3000,
+      panelClass: ['success-snackbar'],
+      verticalPosition: 'top',
       horizontalPosition: 'right'
     });
   }
 
   openUserFormDialog() {
     const dialogRef = this.dialog.open(DeveloperFormComponent, {
-      width: '435px'
+      width: '435px',
+      data: {
+        partialProfile: this.authenticatedUser,
+      }
     });
 
     dialogRef.afterClosed().subscribe((user: CustomUser) => {
       if (!user) {
-        this.showError('Falha ao obter usuário');
+        this.showError('Usuário não cadastrado.');
         return;
       }
-      // this.userList.push(user);
+
       dialogRef.close();
       this.loadUsers();
     });
@@ -58,18 +71,24 @@ export class AppComponent implements OnInit {
   runQueryParamAuthentication() {
     this.route.queryParams.subscribe(params => {
       const code = params['code'];
-
-      console.log({ codeFromQuery: code })
-
       if (code) {
-        this.authService.getTokenFromCode(code).subscribe(
-          () => {
-            // Token trocado com sucesso, redirecionar para outra página
+        this.authService.getAuthUser(code).subscribe({
+          next: (authUser) => {
+            console.log({ authUser });
+            this.showSuccess('Autenticado');
+            this.authenticatedUser = authUser;
           },
-          error => {
-            console.error('Erro na troca de código por token:', error);
+          error: (error) => {
+            console.error('Erro ao obter usuário autenticado:', error);
+            this.showError('Token inválido, faça login novamente.');
+          },
+          complete: () => {
+            const url = new URL(window.location.href);
+            url.searchParams.delete('code');
+            window.history.replaceState({}, document.title, url.toString());
+            this.openUserFormDialog();
           }
-        );
+        });
       }
     });
   }
