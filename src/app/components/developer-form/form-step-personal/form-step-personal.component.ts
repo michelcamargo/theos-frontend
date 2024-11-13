@@ -7,7 +7,6 @@ import { GithubAuthComponent } from '../../github-auth/github-auth.component';
 import { CustomUser } from '../../../models/custom-user.model';
 import {NgForOf, NgIf} from '@angular/common';
 import { MatAutocomplete, MatAutocompleteTrigger, MatOption } from '@angular/material/autocomplete';
-import {UsersService} from '../../../services/users.service';
 
 @Component({
   selector: 'form-step-personal',

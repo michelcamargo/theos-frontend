@@ -177,7 +177,7 @@ export class DeveloperFormComponent implements OnInit {
   }
 
   loadNextPage(field: string = 'name') {
-    const autocompleteInfo = this.autoCompleteIndexes.find(item => item.field === field)\
+    const autocompleteInfo = this.autoCompleteIndexes.find(item => item.field === field)
     if (autocompleteInfo) {
       autocompleteInfo.page++;
       this.setupAutoComplete(field);
