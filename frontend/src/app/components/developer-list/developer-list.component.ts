@@ -3,6 +3,7 @@ import { MatCard, MatCardActions, MatCardContent, MatCardHeader } from '@angular
 import { MatIcon } from '@angular/material/icon';
 import { CustomUser } from '../../models/custom-user.model';
 import { NgForOf, NgIf } from '@angular/common';
+import {LoadingFeedbackComponent} from '../loading-feedback/loading-feedback.component';
 
 @Component({
   selector: 'app-developer-list',
@@ -14,13 +15,15 @@ import { NgForOf, NgIf } from '@angular/common';
     MatCardActions,
     MatIcon,
     NgIf,
-    NgForOf
+    NgForOf,
+    LoadingFeedbackComponent
   ],
   templateUrl: './developer-list.component.html',
   styleUrl: './developer-list.component.scss'
 })
 export class DeveloperListComponent implements OnInit {
   @Input({ required: true }) items!: CustomUser[];
+  @Input({ required: true }) isLoading!: boolean;
 
   constructor() {}
 

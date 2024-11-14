@@ -107,7 +107,7 @@ export class DeveloperFormComponent implements OnInit {
       this.isDebouncing = true;
 
       if (nameValue) {
-        this.usersService.getUsersByFullname(nameValue, page).subscribe({
+        this.usersService.getUsersByFullname(nameValue, { page }).subscribe({
           next: (users) => {
             if (!users || !users.length) {
               console.log('> no users found.');
@@ -115,11 +115,10 @@ export class DeveloperFormComponent implements OnInit {
             }
 
             this.suggestionUsers = users;
-              // this.userForm.get('');
-              console.log('Usuários encontrado:', users);
+            console.log('Usuários encontrados:', users);
           },
           error: (error) => {
-            console.warn(`Falha ao autocompletar do campo ${field}.`, error);
+            console.warn(`Falha ao autocompletar campo ${field}.`, error);
             this.isDebouncing = false;
           },
           complete: () => {
@@ -199,14 +198,24 @@ export class DeveloperFormComponent implements OnInit {
         skills: formData.skills.split(',').map((skill: string) => skill.trim())
       };
 
-      this.developerAdded.emit(incomingUser);
+      this.usersService.registerNew(incomingUser).subscribe({
+        next: (user: CustomUser) => {
+          this.developerAdded.emit(user);
 
-      this.alert.open('Usuário cadastrado com sucesso!', 'Fechar', {
-        duration: 2000,
-        panelClass: ['success-snackbar']
+          this.alert.open('Usuário cadastrado com sucesso!', 'Fechar', {
+            duration: 2000,
+            panelClass: ['success-snackbar']
+          });
+        },
+        error: (err) =>  {
+          this.alert.open('Falha ao salvar usuário, por favor, tente novamente', 'Fechar', {
+            duration: 3000,
+            panelClass: ['error-snackbar']
+          });
+          console.error('Falha ao salvar usuário', err)
+        },
+        complete: () => this.userForm.reset(),
       });
-
-      this.userForm.reset();
     } else {
       console.log({ form: this.userForm, valid: this.userForm.valid, error: this.userForm.errors })
 

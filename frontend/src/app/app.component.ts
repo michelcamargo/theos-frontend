@@ -19,6 +19,8 @@ import {DeveloperFilter} from './types/developer';
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
+  developerListPage: number = 1;
+  isLoadingDevelopers: boolean = false;
   availableDevelopers: CustomUser[] = [];
   developerList: CustomUser[] = [];
   authenticatedUser?: CustomUser = undefined;
@@ -31,18 +33,18 @@ export class AppComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {}
 
-  showError(message: string) {
+  showError(message: string, duration = 3000) {
     this.snackBar.open(message, 'Fechar', {
-      duration: 3000,
+      duration,
       panelClass: ['error-snackbar'],
       verticalPosition: 'top',
       horizontalPosition: 'right'
     });
   }
 
-  showSuccess(message: string) {
+  showSuccess(message: string, duration = 3000) {
     this.snackBar.open(message, 'Fechar', {
-      duration: 3000,
+      duration,
       panelClass: ['success-snackbar'],
       verticalPosition: 'top',
       horizontalPosition: 'right'
@@ -51,7 +53,7 @@ export class AppComponent implements OnInit {
 
   openUserFormDialog() {
     const dialogRef = this.dialog.open(DeveloperFormComponent, {
-      width: '435px',
+      width: '480px',
       data: {
         partialProfile: this.authenticatedUser,
       },
@@ -68,8 +70,24 @@ export class AppComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((user: CustomUser) => {
       if (!user) {
-        this.showError('Formulário .');
+        this.showError('Desenvolvedor não cadastrado.', 1000);
         return;
+      }
+    });
+  }
+
+  loadRegisteredDevelopers() {
+    this.isLoadingDevelopers = true;
+    this.usersService.getUsers({ page: this.developerListPage }).subscribe({
+      next: (developers) => {
+        this.availableDevelopers = developers;
+      },
+      error: (error) => {
+        this.showError('Falha ao buscar lista de desenvolvedores');
+        console.error(error, 'Falha ao buscar lista de desenvolvedores')
+      },
+      complete: () => {
+        this.isLoadingDevelopers = false;
       }
     });
   }
@@ -99,6 +117,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loadRegisteredDevelopers();
     this.runQueryParamAuthentication();
   }
 

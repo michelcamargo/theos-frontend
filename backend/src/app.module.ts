@@ -10,9 +10,18 @@ import { WinstonMiddleware } from './common/middlewares/winston.middleware';
 import { AppController } from './app.controller';
 import { GithubModule } from './models/github/github.module';
 import { AuthModule } from './models/auth/auth.module';
+import {TypeOrmModule} from "@nestjs/typeorm";
+import {DeveloperEntity} from "./models/developers/entities/developer.entity";
+import {DevelopersModule} from "./models/developers/developers.module";
 
 @Module({
   imports: [
+    TypeOrmModule.forRoot({
+      type: 'sqlite',
+      database: 'dev.sqlite',
+      entities: [DeveloperEntity],
+      synchronize: true,
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [appConfig],
@@ -26,6 +35,7 @@ import { AuthModule } from './models/auth/auth.module';
     }),
     GithubModule,
     AuthModule,
+    DevelopersModule,
   ],
   providers: [
     {

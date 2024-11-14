@@ -19,23 +19,22 @@ export class GithubService {
 
   async getUserList(): Promise<GithubUserDto[]> {
     const response = await this.axios.get<GithubUserDto[]>(`/users`);
-    return response.data;
+    
+    return response.data as GithubUserDto[];
   }
 
-  async getByUsername(searchReference: string): Promise<GithubUserDto> {
-    const response = await this.axios.get<GithubUserDto>(
+  async getByUsername(searchReference: string): Promise<GithubUserDto[]> {
+    const response = await this.axios.get<GithubUserDto[]>(
       `/users/${searchReference}`,
     );
-    return response.data;
+    return response.data as GithubUserDto[];
   }
 
-  async getByFullname(searchReference: string): Promise<GithubUserDto> {
+  async getByFullname(searchReference: string): Promise<GithubUserDto[]> {
     const response = await this.axios.get<GithubUserDto[]>(
       `/users?q=${searchReference}+in:fullname`,
     );
 
-    console.log({ byUsername: response.data });
-
-    return response.data[0];
+    return response.data as GithubUserDto[];
   }
 }

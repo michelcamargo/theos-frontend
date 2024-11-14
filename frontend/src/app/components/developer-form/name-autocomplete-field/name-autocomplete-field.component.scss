@@ -1,0 +1,12 @@
+.form__fieldGroup {
+    display: flex !important;
+    position: relative;
+    flex-direction: column;
+    width: 100%;
+
+  .form__fieldContent {
+    .form__fieldLabel {}
+    .form__fieldInput {}
+    .form__fieldHint {}
+  }
+}

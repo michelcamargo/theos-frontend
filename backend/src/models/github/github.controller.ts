@@ -20,17 +20,17 @@ export class GithubController {
   async findByUsername(
     @Query('user') username?: string,
     @Query('fullname') fullname?: string,
-  ): Promise<CustomUser> {
+  ): Promise<CustomUser[]> {
     if (!fullname && !username) return null;
 
-    const foundUser = fullname
+    const foundUsers = fullname
       ? await this.githubService.getByFullname(fullname)
       : await this.githubService.getByUsername(username);
 
-    console.log({ foundUser });
+    console.log({ foundUsers });
 
-    if (!foundUser) return null;
+    if (!foundUsers) return null;
 
-    return GithubHelpers.parseUser(foundUser);
+    return foundUsers.map(user => GithubHelpers.parseUser(user));
   }
 }

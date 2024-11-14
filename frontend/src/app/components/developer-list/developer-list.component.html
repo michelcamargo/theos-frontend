@@ -1,19 +1,22 @@
 <div class="developer-list">
-  <ng-container *ngIf="items.length > 0; else noDevelopers">
-    <div *ngFor="let dev of items" class="developer-card">
-      <div class="developer-avatar">
-        <img [src]="dev.avatarUrl" alt="{{ dev.name }}" />
+  <loading-feedback *ngIf="isLoading" />
+  <ng-container *ngIf="!isLoading">
+    <ng-container *ngIf="items.length > 0; else noDevelopers">
+      <div *ngFor="let dev of items" class="developer-card">
+        <div class="developer-avatar">
+          <img [src]="dev.avatarUrl" alt="{{ dev.name }}" />
+        </div>
+        <div class="developer-info">
+          <h3>{{ dev.name }}</h3>
+          <p>{{ dev.city }}</p>
+          <p><strong>Formação:</strong> {{ dev.education }}</p>
+          <p><strong>Tecnologias:</strong> {{ dev.skills }}</p>
+          <a href="{{ dev.githubUrl }}" target="_blank">Acessar GitHub</a>
+        </div>
       </div>
-      <div class="developer-info">
-        <h3>{{ dev.name }}</h3>
-        <p>{{ dev.city }}</p>
-        <p><strong>Formação:</strong> {{ dev.education }}</p>
-        <p><strong>Tecnologias:</strong> {{ dev.skills }}</p>
-        <a href="{{ dev.githubUrl }}" target="_blank">Acessar GitHub</a>
-      </div>
-    </div>
+    </ng-container>
+    <ng-template #noDevelopers>
+      <p>Nenhum cadastro até agora.</p>
+    </ng-template>
   </ng-container>
-  <ng-template #noDevelopers>
-    <p>Nenhum cadastro até agora.</p>
-  </ng-template>
 </div>
