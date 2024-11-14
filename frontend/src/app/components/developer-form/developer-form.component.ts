@@ -12,9 +12,8 @@ import { FormStepExperienceComponent } from './form-step-experience/form-step-ex
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NgComponentOutlet, NgIf } from '@angular/common';
 import { UsersService } from '../../services/users.service';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
-
-type FieldAutocompleteIndex = { field: string, page: number };
+import {debounceTime, distinctUntilChanged, filter, take} from 'rxjs';
+import {FieldAutocompleteIndex} from '../../types/form';
 
 @Component({
   selector: 'app-developer-form',
@@ -41,12 +40,9 @@ export class DeveloperFormComponent implements OnInit {
 
   userForm: FormGroup;
   inheritAuthInfo?: Partial<CustomUser>;
-  userList: CustomUser[] = [];
+  suggestionUsers: Partial<CustomUser>[] = [];
+  lastSuggestionReference?: string;
   currentStep: number;
-  filteredUsers: any[] = [];
-  autoCompleteIndexes: FieldAutocompleteIndex[] = [
-    { field: 'name', page: 1 },
-  ];
   isDebouncing: boolean = false;
   steps = [
     {
@@ -94,7 +90,7 @@ export class DeveloperFormComponent implements OnInit {
     return this.steps[this.currentStep].fields.every(field => this.userForm.get(field)?.valid);
   }
 
-  setupAutoComplete(field: string, _debounceTime = 2000) {
+  setupAutoComplete(field: string, page: number = 1, _debounceTime = 2000) {
     const inputControl = this.userForm.get(field);
 
     if (!inputControl) {
@@ -104,28 +100,31 @@ export class DeveloperFormComponent implements OnInit {
 
     inputControl.valueChanges.pipe(
       debounceTime(_debounceTime),
-      distinctUntilChanged()
-    ).subscribe(name => {
+      distinctUntilChanged(),
+      filter(name => !!name && name !== this.lastSuggestionReference),
+      take(1)
+    ).subscribe(nameValue => {
       this.isDebouncing = true;
 
-      const autocompleteInfo = this.autoCompleteIndexes.find(item => item.field === field)
-
-      if (name) {
-        this.usersService.getUserByFullname(name, autocompleteInfo?.page ?? 1).subscribe({
-          next: (user) => {
-            if (!user) {
-              console.log('> not found by name')
+      if (nameValue) {
+        this.usersService.getUsersByFullname(nameValue, page).subscribe({
+          next: (users) => {
+            if (!users || !users.length) {
+              console.log('> no users found.');
               return;
             }
 
+            this.suggestionUsers = users;
               // this.userForm.get('');
-              console.log('Usuário encontrado:', user);
+              console.log('Usuários encontrado:', users);
           },
           error: (error) => {
             console.warn(`Falha ao autocompletar do campo ${field}.`, error);
+            this.isDebouncing = false;
           },
           complete: () => {
             this.isDebouncing = false;
+            this.lastSuggestionReference = nameValue;
           }
         });
       }
@@ -149,19 +148,33 @@ export class DeveloperFormComponent implements OnInit {
     });
   }
 
+  autoCompleteHandler({ page, field, debounceTime}: FieldAutocompleteIndex) {
+    this.setupAutoComplete(field, page, debounceTime);
+  }
+
   changeStepHandler(step: number) {
     if (step < 0 && step >= -(this.steps.length - 1)) {
       this.currentStep = this.currentStep + step;
       return;
     }
 
-    const validatorAlert = () => this.alert.open(`Preencha os campos obrigatórios para continuar`, 'Fechar', {
-      duration: 3000,
-      panelClass: ['error-snackbar']
-    });
+    const validatorAlert = (errors: string[]) => {
+      console.log({validationErrors: errors });
 
-    if (!this.steps[this.currentStep].fields.every(field => !!this.userForm.get(field)?.valid)) {
-      validatorAlert();
+      this.alert.open(`Preencha os campos obrigatórios para continuar ${errors}`, 'Fechar', {
+        duration: 3000,
+        panelClass: ['error-snackbar']
+      })
+    };
+
+    if (!this.steps[this.currentStep].fields.every(field => {
+      if (!this.userForm.get(field)?.valid) {
+        validatorAlert([`Campo ${field} inválido`]);
+        return false
+      }
+      return true;
+    })) {
+
       return;
     }
 
@@ -172,16 +185,8 @@ export class DeveloperFormComponent implements OnInit {
     }
   }
 
-  closeForm() {
+  closeFormDialog() {
     this.dialog.closeAll();
-  }
-
-  loadNextPage(field: string = 'name') {
-    const autocompleteInfo = this.autoCompleteIndexes.find(item => item.field === field)
-    if (autocompleteInfo) {
-      autocompleteInfo.page++;
-      this.setupAutoComplete(field);
-    }
   }
 
   onSubmit() {
@@ -194,7 +199,6 @@ export class DeveloperFormComponent implements OnInit {
         skills: formData.skills.split(',').map((skill: string) => skill.trim())
       };
 
-      this.userList.push(incomingUser);
       this.developerAdded.emit(incomingUser);
 
       this.alert.open('Usuário cadastrado com sucesso!', 'Fechar', {
@@ -204,6 +208,8 @@ export class DeveloperFormComponent implements OnInit {
 
       this.userForm.reset();
     } else {
+      console.log({ form: this.userForm, valid: this.userForm.valid, error: this.userForm.errors })
+
       this.alert.open('Campos obrigatórios não preenchidos.', 'Fechar', {
         duration: 3000,
         panelClass: ['error-snackbar']

@@ -3,7 +3,6 @@ import { MatCard, MatCardActions, MatCardContent, MatCardHeader } from '@angular
 import { MatIcon } from '@angular/material/icon';
 import { CustomUser } from '../../models/custom-user.model';
 import { NgForOf, NgIf } from '@angular/common';
-import { UsersService } from '../../services/users.service';
 
 @Component({
   selector: 'app-developer-list',
@@ -21,21 +20,9 @@ import { UsersService } from '../../services/users.service';
   styleUrl: './developer-list.component.scss'
 })
 export class DeveloperListComponent implements OnInit {
-  @Input() userList: CustomUser[] = [];
+  @Input({ required: true }) items!: CustomUser[];
 
-  constructor(private usersService: UsersService) {}
+  constructor() {}
 
-  ngOnInit() {
-    this.usersService.getUsers().subscribe({
-      next: (data) => {
-        this.userList = data;
-      },
-      error: (error) => {
-        console.error('Erro ao carregar usuários:', error);
-      },
-      complete: () => {
-        console.log('finished')
-      }
-    })
-  }
+  ngOnInit() {}
 }

@@ -8,8 +8,8 @@ import { DeveloperListComponent } from './components/developer-list/developer-li
 import { MatDialog } from '@angular/material/dialog';
 import { MatButton } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable, of } from 'rxjs';
 import { AuthService } from './services/auth.service';
+import {DeveloperFilter} from './types/developer';
 
 @Component({
   selector: 'app-root',
@@ -19,8 +19,8 @@ import { AuthService } from './services/auth.service';
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
-  userList: Observable<CustomUser[]> = of([]);
-  filteredUsers: CustomUser[] = [];
+  availableDevelopers: CustomUser[] = [];
+  developerList: CustomUser[] = [];
   authenticatedUser?: CustomUser = undefined;
 
   constructor(
@@ -54,16 +54,23 @@ export class AppComponent implements OnInit {
       width: '435px',
       data: {
         partialProfile: this.authenticatedUser,
+      },
+      hasBackdrop: true,
+    });
+
+    dialogRef.componentInstance.developerAdded.subscribe((user: CustomUser) => {
+      if (user) {
+        this.developerList.push(user);
+        this.showSuccess('Desenvolvedor adicionado à lista.')
+        dialogRef.close();
       }
     });
 
     dialogRef.afterClosed().subscribe((user: CustomUser) => {
       if (!user) {
-        this.showError('Usuário não cadastrado.');
+        this.showError('Formulário .');
         return;
       }
-
-      dialogRef.close();
     });
   }
 
@@ -95,13 +102,14 @@ export class AppComponent implements OnInit {
     this.runQueryParamAuthentication();
   }
 
-  onFilterChanged(filter: { skills?: string[]; city?: string; education?: string }): void {
-    this.userList.subscribe((users: CustomUser[]) => {
-      this.filteredUsers = users.filter(developer =>
-        (!filter.skills || filter.skills.every(skill => developer.skills.includes(skill))) &&
-        (!filter.city || developer.city.includes(filter.city)) &&
-        (!filter.education || developer.education.includes(filter.education))
-      );
+  filterChangeHandler({ skills, city, education }: DeveloperFilter): void {
+    this.developerList = this.availableDevelopers.filter(dev => {
+      const hasSkills = skills ? skills.split(',').every(skill => dev.skills.includes(skill.trim())) : true;
+      const hasCity = city ? dev.city === city : true;
+      const hasEducation = education ? dev.education === education : true;
+
+      return hasSkills && hasCity && hasEducation;
     });
   }
+
 }

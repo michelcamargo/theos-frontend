@@ -1,7 +1,7 @@
 <div  class="form__stepWrapper">
   <div class="form__stepHeading">
-    <div><span>Nome:</span><span>{{'Michel Camargo'}}</span></div>
-    <div><span>Email:</span><span>{{'michelcamargo@outlook.com'}}</span></div>
+    <div><span>Nome:</span><span>{{getFieldValue('name')}}</span></div>
+    <div><span>Email:</span><span>{{getFieldValue('email')}}</span></div>
   </div>
 
   <div class="form__fieldGroup" [formGroup]="formRef">

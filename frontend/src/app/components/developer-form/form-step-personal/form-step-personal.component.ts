@@ -7,6 +7,10 @@ import { GithubAuthComponent } from '../../github-auth/github-auth.component';
 import { CustomUser } from '../../../models/custom-user.model';
 import {NgForOf, NgIf} from '@angular/common';
 import { MatAutocomplete, MatAutocompleteTrigger, MatOption } from '@angular/material/autocomplete';
+import {
+  NameAutocompleteFieldComponent
+} from '../name-autocomplete-field/name-autocomplete-field.component';
+import {FieldAutocompleteIndex} from '../../../types/form';
 
 @Component({
   selector: 'form-step-personal',
@@ -23,7 +27,8 @@ import { MatAutocomplete, MatAutocompleteTrigger, MatOption } from '@angular/mat
     MatAutocomplete,
     MatAutocompleteTrigger,
     MatOption,
-    NgForOf
+    NgForOf,
+    NameAutocompleteFieldComponent
   ],
   templateUrl: './form-step-personal.component.html',
   styleUrl: '../developer-form.component.scss'
@@ -31,28 +36,18 @@ import { MatAutocomplete, MatAutocompleteTrigger, MatOption } from '@angular/mat
 export class FormStepPersonalComponent {
   @Input({ required: true }) formRef!: FormGroup;
   @Input() partialProfile?: Partial<CustomUser>;
-  @Input() autoCompleteSetup!: Function;
-  @Input() isDebouncing: boolean = false;
-  @Input() filteredUsers: any[] = [];
-  @Output() loadNextPage: EventEmitter<void> = new EventEmitter<void>();
-
-  isAuthenticated: boolean = Boolean(this.partialProfile);
+  @Input({ required: true }) isDebouncing: boolean = false;
+  @Output() autocompleteHandler: EventEmitter<FieldAutocompleteIndex> = new EventEmitter<FieldAutocompleteIndex>();
 
   constructor() {}
 
-  fieldFocusHandler(inputName: string): void {
-    this.autoCompleteSetup(inputName);
-    // this.filteredUsers = [];
-    // this.loadUsers();
+  isAuthenticated() {
+    return !!this.partialProfile;
   }
 
-  selectedOptionHandler(event: any) {
-    const selectedUser = event.option.value;
-    this.formRef.get('name')?.setValue(selectedUser);
-  }
+  handleAutocompleteUpdate(event: FieldAutocompleteIndex): void {
 
-  onScroll() {
-    this.loadNextPage.emit();
+    this.autocompleteHandler.emit(event)
   }
 
 }

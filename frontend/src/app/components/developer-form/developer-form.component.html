@@ -4,11 +4,9 @@
     <div class="form__stepContainer">
       <form-step-personal *ngIf="currentStep === 0"
         [formRef]="userForm"
-        [autoCompleteSetup]="setupAutoComplete.bind(this)"
-        [filteredUsers]="filteredUsers"
         [isDebouncing]="isDebouncing"
         [partialProfile]="inheritAuthInfo"
-        (loadNextPage)="loadNextPage()"
+        (autocompleteHandler)="autoCompleteHandler($event)"
       />
       <form-step-github *ngIf="currentStep === 1" [formRef]="userForm"></form-step-github>
       <form-step-experience *ngIf="currentStep === 2" [formRef]="userForm"></form-step-experience>
@@ -17,7 +15,7 @@
       <button
         *ngIf="currentStep === 0"
         class="form__handleStepButton form__previousStepButton" mat-raised-button color="primary" type="button"
-        (click)="closeForm()"
+        (click)="closeFormDialog()"
       >
         Fechar
       </button>

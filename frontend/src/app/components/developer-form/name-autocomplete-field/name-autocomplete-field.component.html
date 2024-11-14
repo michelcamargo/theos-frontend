@@ -1,0 +1,12 @@
+<div [formGroup]="formGroup">
+  <mat-form-field class="form__fieldContent" appearance="fill">
+    <mat-label class="form__fieldLabel">Nome</mat-label>
+    <input class="form__fieldInput" matInput formControlName="name" (focus)="fieldFocusHandler('name')">
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedOptionHandler($event)">
+      <loading-feedback *ngIf="isLoading" />
+      <mat-option *ngFor="let user of filteredUsers" [value]="user.name">
+        {{ user.name }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</div>

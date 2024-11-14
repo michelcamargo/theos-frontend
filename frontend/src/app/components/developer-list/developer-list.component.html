@@ -1,20 +1,19 @@
 <div class="developer-list">
-  <ng-container *ngIf="userList.length > 0; else noDevelopers">
-    <div *ngFor="let user of userList" class="developer-card">
+  <ng-container *ngIf="items.length > 0; else noDevelopers">
+    <div *ngFor="let dev of items" class="developer-card">
       <div class="developer-avatar">
-        <img [src]="user.avatarUrl" alt="{{ user.name }}" />
+        <img [src]="dev.avatarUrl" alt="{{ dev.name }}" />
       </div>
       <div class="developer-info">
-        <h3>{{ user.name }}</h3>
-        <p>{{ user.city }}</p>
-        <p><strong>Formação:</strong> {{ user.education }}</p>
-        <p><strong>Tecnologias:</strong> {{ user.skills }}</p>
-        <a href="{{ user.githubUrl }}" target="_blank">Acessar GitHub</a>
+        <h3>{{ dev.name }}</h3>
+        <p>{{ dev.city }}</p>
+        <p><strong>Formação:</strong> {{ dev.education }}</p>
+        <p><strong>Tecnologias:</strong> {{ dev.skills }}</p>
+        <a href="{{ dev.githubUrl }}" target="_blank">Acessar GitHub</a>
       </div>
     </div>
   </ng-container>
-  <!-- Mensagem quando não houver desenvolvedores para exibir -->
   <ng-template #noDevelopers>
-    <p>Nenhum desenvolvedor encontrado.</p>
+    <p>Nenhum cadastro até agora.</p>
   </ng-template>
 </div>

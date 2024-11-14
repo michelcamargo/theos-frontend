@@ -2,6 +2,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import {MatFormField, MatLabel} from '@angular/material/form-field';
 import {FormsModule} from '@angular/forms';
 import {MatInput} from '@angular/material/input';
+import {DeveloperFilter} from '../../types/developer';
 
 @Component({
   selector: 'app-developer-filter',
@@ -17,16 +18,15 @@ import {MatInput} from '@angular/material/input';
   styleUrl: './developer-filter.component.scss'
 })
 export class DeveloperFilterComponent {
-  @Output() filterChanged = new EventEmitter<{ skills: string[], education: string, city: string }>();
+  @Output() filterChanged = new EventEmitter<DeveloperFilter>();
 
-  skillsInput: string = '';
+  skills: string = '';
   education: string = '';
   city: string = '';
 
   onFilterChange(): void {
-    const skillsArray = this.skillsInput.split(',').map(skill => skill.trim());
     this.filterChanged.emit({
-      skills: skillsArray,
+      skills: this.skills,
       education: this.education,
       city: this.city
     });

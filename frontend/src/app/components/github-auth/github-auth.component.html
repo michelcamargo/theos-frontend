@@ -1,12 +1,9 @@
 <div class="githubAuth__wrapper">
-  <span *ngIf="isAuthenticated">
-    GitHub vinculado ao formulário
-  </span>
-
-  <button *ngIf="!isAuthenticated"
+  <button
     class="githubAuth__button" mat-raised-button color="primary" type="button"
     (click)="githubAccountLoginHandler()"
+    [disabled]="isAuthenticated"
   >
-    Entre com o GitHub
+    {{isAuthenticated ? 'GitHub vinculado ao formulário' : 'Entre com o GitHub'}}
   </button>
 </div>

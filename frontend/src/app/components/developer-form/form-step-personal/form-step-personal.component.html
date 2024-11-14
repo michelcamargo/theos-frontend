@@ -1,21 +1,12 @@
 <div class="form__stepContainer">
   <div class="form__quickAuth__github">
-    <app-github-auth [partialProfile]="partialProfile" [isAuthenticated]="isAuthenticated"></app-github-auth>
+    <app-github-auth [partialProfile]="partialProfile" [isAuthenticated]="isAuthenticated()" />
     <span class="form__authAlternativeLabel">
-      {{ isAuthenticated ? 'Confira os dados e prossiga' : 'Ou preencha os campos abaixo:' }}
+      {{ isAuthenticated() ? 'Preencha as informações restantes' : 'Ou preencha os campos abaixo:' }}
     </span>
   </div>
   <div class="form__fieldGroup" [formGroup]="formRef">
-    <mat-form-field class="form__fieldContent" appearance="fill">
-      <mat-label class="form__fieldLabel">Nome</mat-label>
-      <input class="form__fieldInput" matInput formControlName="name" (focus)="fieldFocusHandler('name')">
-      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedOptionHandler($event)">
-        <mat-option *ngFor="let user of filteredUsers" [value]="user.name">
-          {{ user.name }}
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
-
+    <name-autocomplete-field [formGroup]="formRef" (autocompleteSetter)="handleAutocompleteUpdate($event)" [isLoading]="isDebouncing" />
     <mat-form-field class="form__fieldContent" appearance="fill">
       <mat-label class="form__fieldLabel">Email</mat-label>
       <input class="form__fieldInput" matInput type="email" formControlName="email">
