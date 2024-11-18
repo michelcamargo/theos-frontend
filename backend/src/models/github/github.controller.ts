@@ -23,9 +23,9 @@ export class GithubController {
   ): Promise<CustomUser[]> {
     if (!fullname && !username) return null;
 
-    const foundUsers = fullname
-      ? await this.githubService.getByFullname(fullname)
-      : await this.githubService.getByUsername(username);
+    const foundUsers = username
+      ? await this.githubService.getByUsername(username)
+      : await this.githubService.getByFullname(fullname);
 
     console.log({ foundUsers });
 

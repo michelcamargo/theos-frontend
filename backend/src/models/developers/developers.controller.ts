@@ -2,7 +2,7 @@ import {Controller, Post, Body, Get} from '@nestjs/common';
 import { DevelopersService } from './developers.service';
 import {CreateDeveloperDto} from "./dto/create-developer.dto";
 
-@Controller('dev')
+@Controller('users')
 export class DevelopersController {
   constructor(private readonly developersService: DevelopersService) {}
 
@@ -23,9 +23,9 @@ export class DevelopersController {
     try {
       return await this.developersService.storeDeveloper(developer);
     } catch (err) {
-      console.error('Falha ao buscar usuário >>>', err);
+      console.error('Falha ao salvar usuário >>>', err);
       return {
-        err: 'Falha ao buscar usuário',
+        err: 'Falha ao salvar usuário',
       };
     }
   }

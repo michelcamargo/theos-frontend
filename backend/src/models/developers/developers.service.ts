@@ -11,8 +11,6 @@ export class DevelopersService {
   ) {}
   
   async storeDeveloper(developer: any) {
-    console.log({ 'stored >>>': developer })
-    
     return this.userRepository.save(developer);
   }
   

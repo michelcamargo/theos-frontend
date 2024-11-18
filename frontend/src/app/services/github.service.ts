@@ -30,14 +30,10 @@ export class GithubService {
     const queryUsername = username ? `username=${username}${fullname && '&'}` : '';
     const queryFullname = fullname ? `fullname=${fullname}` : '';
 
-    return this.http.get<CustomUser[]>(`${this.apiUrl}/users/search?${queryUsername}${queryFullname}&page=${this.getConfig(config).page}`);
+    return this.http.get<CustomUser[]>(`${this.apiUrl}/search?${queryUsername}${queryFullname}&page=${this.getConfig(config).page}`);
   }
 
-  getUsers(config?: CommonQueryListConfig): Observable<CustomUser[]> {
-    const users = this.http.get<CustomUser[]>(`${this.apiUrl}/users?page=${this.getConfig(config).page}`);
-
-    // console.log({ users:  })
-
-    return users;
+  getUserByUsername(username: string): Observable<CustomUser[]> {
+    return this.http.get<CustomUser[]>(`${this.apiUrl}/users?username=${username}`);
   }
 }
