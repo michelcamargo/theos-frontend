@@ -9,7 +9,7 @@ import { CommonQueryListConfig } from '../types/query';
   providedIn: 'root'
 })
 export class UsersService {
-  private apiUrl = `${environment.apiUrl}`;
+  private apiUrl = `${environment.apiUrl}/users`;
   private defaultQueryListConfig = {
     page: 1
   };
@@ -23,19 +23,19 @@ export class UsersService {
     }
   }
 
-  getUsersByFullname(searchReference: string, config?: CommonQueryListConfig): Observable<CustomUser[]> {
-    return this.http.get<CustomUser[]>(`${this.apiUrl}/users/search?fullname=${searchReference}&page=${this.getConfig(config).page}`);
-  }
-
   registerNew(developer: Partial<CustomUser>): Observable<CustomUser> {
-    return this.http.post<CustomUser>(`${this.apiUrl}/dev`, developer);
+    return this.http.post<CustomUser>(`${this.apiUrl}`, developer);
   }
 
   getUserInfo(searchReference: string, config?: CommonQueryListConfig): Observable<CustomUser[]> {
-    return this.http.get<CustomUser[]>(`${this.apiUrl}/users/search?username=${searchReference}&page=${this.getConfig(config).page}`);
+    return this.http.get<CustomUser[]>(`${this.apiUrl}/search?username=${searchReference}&page=${this.getConfig(config).page}`);
   }
 
   getUsers(config?: CommonQueryListConfig): Observable<CustomUser[]> {
-    return this.http.get<CustomUser[]>(`${this.apiUrl}/users?page=${this.getConfig(config).page}`);
+    const users = this.http.get<CustomUser[]>(`${this.apiUrl}?page=${this.getConfig(config).page}`);
+
+    // console.log({ users:  })
+
+    return users;
   }
 }

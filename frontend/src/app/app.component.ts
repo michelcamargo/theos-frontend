@@ -19,10 +19,10 @@ import {DeveloperFilter} from './types/developer';
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
-  developerListPage: number = 1;
+  filteringDevelopersPage: number = 1;
   isLoadingDevelopers: boolean = false;
   availableDevelopers: CustomUser[] = [];
-  developerList: CustomUser[] = [];
+  filteringDevelopersList: CustomUser[] = [];
   authenticatedUser?: CustomUser = undefined;
 
   constructor(
@@ -62,13 +62,16 @@ export class AppComponent implements OnInit {
 
     dialogRef.componentInstance.developerAdded.subscribe((user: CustomUser) => {
       if (user) {
-        this.developerList.push(user);
+        this.filteringDevelopersList.push(user);
+        this.availableDevelopers.push(user);
         this.showSuccess('Desenvolvedor adicionado à lista.')
+
         dialogRef.close();
       }
     });
 
     dialogRef.afterClosed().subscribe((user: CustomUser) => {
+      this.loadRegisteredDevelopers();
       if (!user) {
         this.showError('Desenvolvedor não cadastrado.', 1000);
         return;
@@ -78,9 +81,13 @@ export class AppComponent implements OnInit {
 
   loadRegisteredDevelopers() {
     this.isLoadingDevelopers = true;
-    this.usersService.getUsers({ page: this.developerListPage }).subscribe({
+    this.usersService.getUsers({ page: this.filteringDevelopersPage }).subscribe({
       next: (developers) => {
+
+        console.log({ developers })
+
         this.availableDevelopers = developers;
+        this.filteringDevelopersList = developers;
       },
       error: (error) => {
         this.showError('Falha ao buscar lista de desenvolvedores');
@@ -122,7 +129,7 @@ export class AppComponent implements OnInit {
   }
 
   filterChangeHandler({ skills, city, education }: DeveloperFilter): void {
-    this.developerList = this.availableDevelopers.filter(dev => {
+    this.filteringDevelopersList = this.availableDevelopers.filter(dev => {
       const hasSkills = skills ? skills.split(',').every(skill => dev.skills.includes(skill.trim())) : true;
       const hasCity = city ? dev.city === city : true;
       const hasEducation = education ? dev.education === education : true;

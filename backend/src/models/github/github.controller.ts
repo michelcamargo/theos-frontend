@@ -3,7 +3,7 @@ import { GithubService } from './github.service';
 import GithubHelpers from '../../helpers/github.helpers';
 import { CustomUser, GithubUser } from './interfaces/github-user';
 
-@Controller('users')
+@Controller('github')
 export class GithubController {
   constructor(private readonly githubService: GithubService) {}
 

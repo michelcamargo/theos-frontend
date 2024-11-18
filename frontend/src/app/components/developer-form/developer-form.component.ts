@@ -11,9 +11,10 @@ import { FormStepPersonalComponent } from './form-step-personal/form-step-person
 import { FormStepExperienceComponent } from './form-step-experience/form-step-experience.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NgComponentOutlet, NgIf } from '@angular/common';
-import { UsersService } from '../../services/users.service';
+import { GithubService } from '../../services/github.service';
 import {debounceTime, distinctUntilChanged, filter, take} from 'rxjs';
 import {FieldAutocompleteIndex} from '../../types/form';
+import {UsersService} from '../../services/users.service';
 
 @Component({
   selector: 'app-developer-form',
@@ -65,6 +66,7 @@ export class DeveloperFormComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { partialProfile?: Partial<CustomUser> },
     private form: FormBuilder,
+    private githubService: GithubService,
     private usersService: UsersService,
     private dialog: MatDialog,
     private alert: MatSnackBar,
@@ -107,7 +109,7 @@ export class DeveloperFormComponent implements OnInit {
       this.isDebouncing = true;
 
       if (nameValue) {
-        this.usersService.getUsersByFullname(nameValue, { page }).subscribe({
+        this.githubService.searchUsers({ fullname: nameValue }, { page }).subscribe({
           next: (users) => {
             if (!users || !users.length) {
               console.log('> no users found.');
