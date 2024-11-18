@@ -8,7 +8,7 @@ export class GithubController {
   constructor(private readonly githubService: GithubService) {}
 
   @Get()
-  async findAll(): Promise<CustomUser[]> {
+  async listAllGithubUsers(): Promise<CustomUser[]> {
     const fetchedUsers = await this.githubService.getUserList();
 
     return fetchedUsers.map((githubUser: GithubUser) =>
@@ -17,20 +17,16 @@ export class GithubController {
   }
 
   @Get('/search')
-  async findByUsername(
-    @Query('user') username?: string,
+  async findGithubUsers(
+    @Query('username') username?: string,
     @Query('fullname') fullname?: string,
   ): Promise<CustomUser[]> {
     if (!fullname && !username) return null;
 
-    const foundUsers = username
-      ? await this.githubService.getByUsername(username)
-      : await this.githubService.getByFullname(fullname);
-
-    console.log({ foundUsers });
+    const { items: foundUsers } = await this.githubService.searchUsers({ username, fullname })
 
     if (!foundUsers) return null;
-
+    
     return foundUsers.map(user => GithubHelpers.parseUser(user));
   }
 }

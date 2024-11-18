@@ -2,6 +2,12 @@ import { Injectable } from '@nestjs/common';
 import axios, { AxiosInstance } from 'axios';
 import * as process from 'node:process';
 import { GithubUserDto } from './dto/github-user.dto';
+import {PaginatedResponse} from "../../types/pagination";
+
+interface GithubSearchUserParams {
+  username?: string;
+  fullname?: string;
+}
 
 @Injectable()
 export class GithubService {
@@ -12,6 +18,7 @@ export class GithubService {
     headers: {
       Authorization: `Bearer ${this.apiToken}`,
       'Content-Type': 'application/json',
+      Accept: 'application/vnd.github+json',
     },
   });
 
@@ -23,18 +30,17 @@ export class GithubService {
     return response.data as GithubUserDto[];
   }
 
-  async getByUsername(searchReference: string): Promise<GithubUserDto[]> {
-    const response = await this.axios.get<GithubUserDto[]>(
+  async getByUsername(searchReference: string): Promise<GithubUserDto> {
+    const response = await this.axios.get<GithubUserDto>(
       `/users/${searchReference}`,
     );
-    return response.data as GithubUserDto[];
+    return response.data as GithubUserDto;
   }
-
-  async getByFullname(searchReference: string): Promise<GithubUserDto[]> {
-    const response = await this.axios.get<GithubUserDto[]>(
-      `/users?q=${searchReference}+in:fullname`,
-    );
-
-    return response.data as GithubUserDto[];
+  
+  async searchUsers({ username, fullname }: GithubSearchUserParams): Promise<PaginatedResponse<GithubUserDto>> {
+    const query = username ? `?q=username:${username}` : (fullname ? `?q=fullname:${fullname}` : '');
+    
+    const response = await this.axios.get<PaginatedResponse<GithubUserDto>>(`/search/users${query}`);
+    return response.data as PaginatedResponse<GithubUserDto>;
   }
 }
