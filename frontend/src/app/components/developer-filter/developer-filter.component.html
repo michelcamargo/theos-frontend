@@ -1,16 +1,37 @@
-<div>
-  <mat-form-field>
-    <mat-label>Tecnologias</mat-label>
-    <input matInput [(ngModel)]="skills" (ngModelChange)="onFilterChange()" placeholder="Ex: Angular, Vue, React">
-  </mat-form-field>
+<div class="listFilter__wrapper">
+  <div class="listFilter__fieldGroup">
+    <mat-form-field class="listFilter__field">
+      <mat-label class="listFilter__fieldLabel">Tecnologias</mat-label>
+      <input class="listFilter__fieldInput"
+         matInput [(ngModel)]="filters.skills"
+         (ngModelChange)="onFilterChange()"
+         placeholder="Ex: Angular, Vue, React"
+      >
+    </mat-form-field>
 
-  <mat-form-field>
-    <mat-label>Formação</mat-label>
-    <input matInput [(ngModel)]="education" (ngModelChange)="onFilterChange()" placeholder="Ex: Ciência da Computação">
-  </mat-form-field>
+    <mat-form-field class="listFilter__field">
+      <mat-label class="listFilter__fieldLabel">Formação</mat-label>
+      <input class="listFilter__fieldInput"
+        matInput
+        [(ngModel)]="filters.education"
+        (ngModelChange)="onFilterChange()"
+        placeholder="Ex: Ciência da Computação"
+      >
+    </mat-form-field>
 
-  <mat-form-field>
-    <mat-label>Cidade</mat-label>
-    <input matInput [(ngModel)]="city" (ngModelChange)="onFilterChange()" placeholder="Ex: São Paulo">
-  </mat-form-field>
+    <mat-form-field class="listFilter__field">
+      <mat-label class="listFilter__fieldLabel">Cidade</mat-label>
+      <input class="listFilter__fieldInput"
+        matInput
+        [(ngModel)]="filters.city"
+        (ngModelChange)="onFilterChange()"
+        placeholder="Ex: São Paulo"
+      >
+    </mat-form-field>
+  </div>
+  <div class="listFilter__actions">
+    <button mat-raised-button color="warn" (click)="clearFilters()" [disabled]="!hasActiveFilters">
+      Limpar filtros
+    </button>
+  </div>
 </div>

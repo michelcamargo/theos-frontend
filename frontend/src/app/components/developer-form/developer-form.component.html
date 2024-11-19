@@ -14,7 +14,7 @@
     <div class="form__bottomNavigation">
       <button
         *ngIf="currentStep === 0"
-        class="form__handleStepButton form__previousStepButton" mat-raised-button color="primary" type="button"
+        class="form__handleStepButton form__previousStepButton" mat-raised-button color="warn" type="button"
         (click)="closeFormDialog()"
       >
         Fechar
@@ -26,14 +26,14 @@
         Voltar
       </button>
       <button *ngIf="currentStep !== steps.length - 1"
-        class="form__handleStepButton form__nextStepButton" mat-raised-button color="primary" type="button"
+        class="form__handleStepButton form__nextStepButton" mat-flat-button color="primary" type="button"
         (click)="changeStepHandler(1)"
         [disabled]="!isStepValid()"
       >
         Avançar
       </button>
       <button *ngIf="currentStep === steps.length - 1"
-        class="form__submitButton" mat-raised-button color="primary" type="submit"
+        class="form__submitButton" mat-flat-button color="primary" type="submit"
       >
         Cadastrar
       </button>

@@ -1,7 +1,7 @@
 <div class="developer-list">
   <loading-feedback *ngIf="isLoading" />
   <ng-container *ngIf="!isLoading">
-    <ng-container *ngIf="items.length > 0; else noDevelopers">
+    <ng-container *ngIf="items.length > 0; else emptyList">
       <div *ngFor="let dev of items" class="developer-card">
         <div class="developer-avatar">
           <img [src]="dev.avatarUrl" alt="{{ dev.name }}" />
@@ -15,8 +15,13 @@
         </div>
       </div>
     </ng-container>
-    <ng-template #noDevelopers>
-      <p>Nenhum cadastro até agora.</p>
+    <ng-template #emptyList>
+      <div *ngIf="hasActiveFilters; else noDevelopers">
+        <p>Nenhum desenvolvedor encontrado, verifique os filtros informados.</p>
+      </div>
+      <ng-template #noDevelopers>
+        <p>Nenhum desenvolvedor cadastrado até agora.</p>
+      </ng-template>
     </ng-template>
   </ng-container>
 </div>

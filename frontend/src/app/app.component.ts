@@ -9,7 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatButton } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from './services/auth.service';
-import {DeveloperFilter} from './types/developer';
+import { DeveloperListFilter } from './types/developer';
 
 @Component({
   selector: 'app-root',
@@ -24,6 +24,8 @@ export class AppComponent implements OnInit {
   availableDevelopers: CustomUser[] = [];
   filteringDevelopersList: CustomUser[] = [];
   authenticatedUser?: CustomUser = undefined;
+  currentFilters: DeveloperListFilter = {};
+  hasActiveFilters: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -128,13 +130,22 @@ export class AppComponent implements OnInit {
     this.runQueryParamAuthentication();
   }
 
-  filterChangeHandler({ skills, city, education }: DeveloperFilter): void {
-    this.filteringDevelopersList = this.availableDevelopers.filter(dev => {
-      const hasSkills = skills ? skills.split(',').every(skill => dev.skills.includes(skill.trim())) : true;
-      const hasCity = city ? dev.city === city : true;
-      const hasEducation = education ? dev.education === education : true;
+  filterChangeHandler({ skills, city, education }: DeveloperListFilter): void {
+    this.currentFilters = { skills, city, education };
+    this.hasActiveFilters = Boolean(Boolean(skills) || Boolean(education) || Boolean(city));
 
-      return hasSkills && hasCity && hasEducation;
+    this.filteringDevelopersList = this.availableDevelopers.filter(dev => {
+      const skillsArray = skills ? skills.split(',').map(skill => skill.trim()) : [];
+
+      const matchSkills = skills
+        ? skillsArray.every(skill => {
+          return dev.skills.some(devSkill => devSkill.toLowerCase().includes(skill.toLowerCase()))
+        }) : true;
+
+      const matchCity = city ? dev.city.toLowerCase().includes(city.toLowerCase()) : true;
+      const matchEducation = education ? dev.education.toLowerCase().includes(education.toLowerCase()) : true;
+
+      return Boolean(Boolean(matchSkills) && Boolean(matchCity) && Boolean(matchEducation));
     });
   }
 

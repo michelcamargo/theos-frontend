@@ -12,9 +12,9 @@ import { FormStepExperienceComponent } from './form-step-experience/form-step-ex
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NgComponentOutlet, NgIf } from '@angular/common';
 import { GithubService } from '../../services/github.service';
-import {debounceTime, distinctUntilChanged, filter, take} from 'rxjs';
-import {FieldAutocompleteIndex} from '../../types/form';
-import {UsersService} from '../../services/users.service';
+import { debounceTime, distinctUntilChanged, filter, take } from 'rxjs';
+import { FieldAutocompleteIndex } from '../../types/form';
+import { UsersService } from '../../services/users.service';
 
 @Component({
   selector: 'app-developer-form',

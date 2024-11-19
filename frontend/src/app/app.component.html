@@ -9,10 +9,10 @@
   </div>
   <div class="main-content__session">
     <h4>Filtros</h4>
-    <app-developer-filter (filterChanged)="filterChangeHandler($event)" />
+    <app-developer-filter (filterChanged)="filterChangeHandler($event)" [hasActiveFilters]="hasActiveFilters" />
   </div>
   <div class="main-content__session">
-    <h4> Lista</h4>
-    <app-developer-list [items]="filteringDevelopersList" [isLoading]="isLoadingDevelopers" />
+    <h4>Lista</h4>
+    <app-developer-list [items]="filteringDevelopersList" [isLoading]="isLoadingDevelopers" [hasActiveFilters]="hasActiveFilters" />
   </div>
 </div>
