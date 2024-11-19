@@ -4,12 +4,12 @@
   .formFeedback__fieldInfo {
 
     .formFeedback__fieldInfoText {
-
-      &.formFeedback__fieldInfoText__key {
-        font-weight: bold;
-      }
       &.formFeedback__fieldInfoText__value {}
     }
+
+    .formFeedback__fieldInfoText__key {
+        font-weight: bold;
+      }
 
   }
 }

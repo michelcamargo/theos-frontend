@@ -16,10 +16,27 @@
           />
         </div>
         <div class="developer__info">
-          <h3>{{ dev.name }}</h3>
-          <p>{{ dev.city }}</p>
-          <p><strong>Formação:</strong> {{ dev.education }}</p>
-          <p><strong>Tecnologias:</strong> {{ dev.skills }}</p>
+          <p class="developer__infoText developer__infoText__name">
+            {{ dev.name }}
+          </p>
+          <p class="developer__infoText developer__infoText__city">
+            <strong class="developer__infoTextKey developer__infoTextKey__city">
+              Cidade:
+            </strong>
+            {{ dev.city }}
+          </p>
+          <p class="developer__infoText developer__infoText__education">
+            <strong class="developer__infoTextKey developer__infoTextKey__education">
+              Formação:
+            </strong>
+            {{ dev.education }}
+          </p>
+          <p class="developer__infoText developer__infoText__skills">
+            <strong class="developer__infoTextKey developer__infoTextKey__skills">
+              Tecnologias:
+            </strong>
+            {{ dev.skills }}
+          </p>
           <div class="developer__link" [ngStyle]="isValidGithubUrl(dev.githubUrl) ? { display: 'block' } : undefined">
             <a href="{{ dev.githubUrl }}" target="_blank">Acessar GitHub</a>
           </div>

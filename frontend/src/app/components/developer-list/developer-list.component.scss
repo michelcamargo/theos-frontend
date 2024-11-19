@@ -43,26 +43,30 @@
 }
 
 .developer__info {
-  text-align: center;
+  text-align: left;
 
-  h3 {
-    margin: 8px 0;
-    font-size: 1.1em;
+  .developer__infoText {
+    margin: 4px 0;
+    font-size: 0.9rem;
   }
 
-  p {
-    margin: 4px 0;
-    font-size: 0.9em;
+  .developer__infoText.developer__infoText__name {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 16px;
+    font-size: 1.1rem;
   }
 
   a {
-    color: #4497ef;
+    color: #1a70cc;
     text-decoration: none;
     font-weight: bold;
   }
 
   .developer__link {
+    font-size: 1.1rem;
     margin-top: 16px;
     display: none;
+    text-align: center;
   }
 }
