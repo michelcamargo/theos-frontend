@@ -83,9 +83,9 @@ export class DeveloperFormComponent implements OnInit {
     this.currentStep = 0;
     this.userForm = this.form.group({
       name: ['', Validators.required],
-      email: ['', [Validators.required, ValidatorsHelper.email()]],
-      githubUrl: ['', [Validators.required, ValidatorsHelper.url()]],
-      avatarUrl: ['', [Validators.required, ValidatorsHelper.url()]],
+      email: ['', [Validators.required, ValidatorsHelper.emailFormInput()]],
+      githubUrl: ['', [Validators.required, ValidatorsHelper.urlFormInput()]],
+      avatarUrl: ['', [Validators.required, ValidatorsHelper.urlFormInput()]],
       city: ['', [Validators.required]],
       education: ['', [Validators.required]],
       skills: ['', [Validators.required]]

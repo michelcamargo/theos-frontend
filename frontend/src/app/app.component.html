@@ -1,17 +1,17 @@
-<div class="main-content container">
-  <div class="main-content__heading">
-    <h2 class="main-content__headingText">
+<div class="mainContent container">
+  <div class="mainContent__heading">
+    <h2 class="mainContent__headingText">
       Cadastro DEV
     </h2>
-    <button mat-raised-button color="primary" (click)="openUserFormDialog()">
+    <button mat-flat-button color="primary" (click)="openUserFormDialog()">
       Cadastrar Desenvolvedor
     </button>
   </div>
-  <div class="main-content__session">
+  <div class="mainContent__session">
     <h4>Filtros</h4>
     <app-developer-filter (filterChanged)="filterChangeHandler($event)" [hasActiveFilters]="hasActiveFilters" />
   </div>
-  <div class="main-content__session">
+  <div class="mainContent__session">
     <h4>Lista</h4>
     <app-developer-list [items]="filteringDevelopersList" [isLoading]="isLoadingDevelopers" [hasActiveFilters]="hasActiveFilters" />
   </div>

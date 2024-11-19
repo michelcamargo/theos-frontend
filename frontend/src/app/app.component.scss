@@ -1,17 +1,18 @@
-.main-content {
+.mainContent {
   max-width: 1130px;
   margin: 0 auto;
-  padding: 0 16px;
+  padding: 16px;
 
-  .main-content__heading {
+  .mainContent__heading {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
 
-    .main-content__headingText {}
+    .mainContent__headingText {}
   }
-  .main-content__wrapper {
-    .main-content__session {}
+  .mainContent__wrapper {
+    .mainContent__session {}
   }
 }

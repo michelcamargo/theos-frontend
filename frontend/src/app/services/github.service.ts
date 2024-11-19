@@ -24,16 +24,16 @@ export class GithubService {
     }
   }
 
-  searchUsers({ username, fullname }: ThirdPartyUserSearchDTO, config?: CommonQueryListConfig): Observable<Partial<CustomUser>[]> {
-    if (!username && !fullname) return new Observable<Partial<CustomUser>[]>()
+  searchUsers({ username, fullname }: ThirdPartyUserSearchDTO, config?: CommonQueryListConfig): Observable<CustomUser[]> {
+    if (!username && !fullname) return new Observable<CustomUser[]>()
 
     const queryUsername = username ? `username=${username}${fullname && '&'}` : '';
     const queryFullname = fullname ? `fullname=${fullname}` : '';
 
-    return this.http.get<Partial<CustomUser[]>>(`${this.apiUrl}/search?${queryUsername}${queryFullname}&page=${this.getConfig(config).page}`);
+    return this.http.get<CustomUser[]>(`${this.apiUrl}/search?${queryUsername}${queryFullname}&page=${this.getConfig(config).page}`);
   }
 
-  getUserByUsername(username: string): Observable<Partial<CustomUser>[]> {
-    return this.http.get<Partial<CustomUser[]>>(`${this.apiUrl}/users?username=${username}`);
+  getUserByUsername(username: string): Observable<CustomUser[]> {
+    return this.http.get<CustomUser[]>(`${this.apiUrl}/users?username=${username}`);
   }
 }

@@ -1,7 +1,17 @@
 import { ValidationErrors, ValidatorFn } from '@angular/forms';
 
 class ValidatorsHelper {
-  static base64Image(): ValidatorFn {
+  static isValidEmail(email: string) {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  }
+
+  static isValidUrl(url: string) {
+    const urlRegex = /^(https?:\/\/)?([\w\-]+(\.[\w\-]+)+)(\/[^\s]*)?$/i;
+    return urlRegex.test(url);
+  }
+
+  static formBase64Image(): ValidatorFn {
     return (control): ValidationErrors | null => {
       const value = control.value;
 
@@ -18,7 +28,7 @@ class ValidatorsHelper {
     };
   }
 
-  static url(): ValidatorFn {
+  static urlFormInput(): ValidatorFn {
     return (control): ValidationErrors | null => {
       const value = control.value;
 
@@ -26,24 +36,18 @@ class ValidatorsHelper {
         return null;
       }
 
-      const urlRegex = /^(https?:\/\/)?([\w\-]+(\.[\w\-]+)+)(\/[^\s]*)?$/i;
-      const valid = urlRegex.test(value);
-
-      return valid ? null : { invalidUrl: true };
+      return ValidatorsHelper.isValidUrl(value) ? null : { invalidUrl: true }
     };
   }
 
-  static email(): ValidatorFn {
+  static emailFormInput(): ValidatorFn {
     return (control): ValidationErrors | null => {
       const value = control.value;
       if (!value) {
         return null;
       }
 
-      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-      const valid = emailRegex.test(value);
-
-      return valid ? null : { invalidEmail: true }
+      return ValidatorsHelper.isValidEmail(value) ? null : { invalidEmail: true }
     };
   }
 }

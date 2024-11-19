@@ -1,17 +1,27 @@
-<div class="developer-list">
+<div class="developer__list">
   <loading-feedback *ngIf="isLoading" />
   <ng-container *ngIf="!isLoading">
     <ng-container *ngIf="items.length > 0; else emptyList">
-      <div *ngFor="let dev of items" class="developer-card">
-        <div class="developer-avatar">
-          <img [src]="dev.avatarUrl" alt="{{ dev.name }}" />
+      <div *ngFor="let dev of items"
+        class="developer__card"
+        (click)="developerSelectionHandler(dev)"
+        [style.cursor]="isValidGithubUrl(dev.githubUrl) ? 'pointer' : 'unset'"
+      >
+        <div class="developer__avatar">
+          <img appAvatarFallback
+            [src]="dev.avatarUrl"
+            [avatarName]="dev.name"
+            alt="Imagem de perfil de {{ dev.name }}"
+          />
         </div>
-        <div class="developer-info">
+        <div class="developer__info">
           <h3>{{ dev.name }}</h3>
           <p>{{ dev.city }}</p>
           <p><strong>Formação:</strong> {{ dev.education }}</p>
           <p><strong>Tecnologias:</strong> {{ dev.skills }}</p>
-          <a href="{{ dev.githubUrl }}" target="_blank">Acessar GitHub</a>
+          <div class="developer__link" [ngStyle]="isValidGithubUrl(dev.githubUrl) ? { display: 'block' } : undefined">
+            <a href="{{ dev.githubUrl }}" target="_blank">Acessar GitHub</a>
+          </div>
         </div>
       </div>
     </ng-container>
