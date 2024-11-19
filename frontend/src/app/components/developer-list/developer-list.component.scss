@@ -10,12 +10,21 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #272742;
+  background-color: #20203a;
   color: #fff;
   padding: 16px;
   width: 200px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.2s ease-out, opacity 0.2s ease-out;
+  opacity: .8;
+}
+
+.developer__card__validUrl {
+  &:hover {
+    opacity: 1;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  }
 }
 
 .developer__avatar {
@@ -47,7 +56,7 @@
   }
 
   a {
-    color: #4caf50;
+    color: #4497ef;
     text-decoration: none;
     font-weight: bold;
   }

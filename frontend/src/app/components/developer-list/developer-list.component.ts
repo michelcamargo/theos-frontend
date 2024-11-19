@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import { MatCard, MatCardActions, MatCardContent, MatCardHeader } from '@angular/material/card';
 import { MatIcon } from '@angular/material/icon';
 import { CustomUser } from '../../models/custom-user.model';
-import { NgForOf, NgIf, NgStyle } from '@angular/common';
+import {NgClass, NgForOf, NgIf, NgStyle} from '@angular/common';
 import { LoadingFeedbackComponent } from '../loading-feedback/loading-feedback.component';
 import { AvatarFallbackDirective } from '../../directives/fallback.directive';
 import ValidatorsHelper from '../../helpers/validators.helper';
@@ -21,6 +21,7 @@ import ValidatorsHelper from '../../helpers/validators.helper';
     LoadingFeedbackComponent,
     NgStyle,
     AvatarFallbackDirective,
+    NgClass,
   ],
   templateUrl: './developer-list.component.html',
   styleUrl: './developer-list.component.scss'

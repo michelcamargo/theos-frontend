@@ -36,6 +36,7 @@
       </button>
       <button *ngIf="currentStep === steps.length - 1"
         class="form__submitButton" mat-flat-button color="primary" type="submit"
+        [disabled]="!isStepValid()"
       >
         Cadastrar
       </button>

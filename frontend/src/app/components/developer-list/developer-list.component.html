@@ -6,6 +6,7 @@
         class="developer__card"
         (click)="developerSelectionHandler(dev)"
         [style.cursor]="isValidGithubUrl(dev.githubUrl) ? 'pointer' : 'unset'"
+        [ngClass]="{'developer__card__validUrl': isValidGithubUrl(dev.githubUrl)}"
       >
         <div class="developer__avatar">
           <img appAvatarFallback
