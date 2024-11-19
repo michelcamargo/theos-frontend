@@ -38,8 +38,7 @@ export class GithubService {
   }
   
   async searchUsers({ username, fullname }: GithubSearchUserParams): Promise<PaginatedResponse<GithubUserDto>> {
-    const query = username ? `?q=username:${username}` : (fullname ? `?q=fullname:${fullname}` : '');
-    
+    const query = username ? `?q=user:${username}` : (fullname ? `?q=fullname:${fullname}` : '');
     const response = await this.axios.get<PaginatedResponse<GithubUserDto>>(`/search/users${query}`);
     return response.data as PaginatedResponse<GithubUserDto>;
   }
