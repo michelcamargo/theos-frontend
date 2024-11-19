@@ -63,20 +63,20 @@ export class AppComponent implements OnInit {
     });
 
     dialogRef.componentInstance.developerAdded.subscribe((user: CustomUser) => {
+      if (!user) {
+        this.showError('Desenvolvedor não cadastrado.', 1000);
+        this.loadRegisteredDevelopers();
+        dialogRef.close();
+      }
+
       if (user) {
-        this.filteringDevelopersList.push(user);
-        this.availableDevelopers.push(user);
+        // this.filteringDevelopersList.push(user);
+        // this.availableDevelopers.push(user);
+        this.loadRegisteredDevelopers();
+
         this.showSuccess('Desenvolvedor adicionado à lista.')
 
         dialogRef.close();
-      }
-    });
-
-    dialogRef.afterClosed().subscribe((user: CustomUser) => {
-      this.loadRegisteredDevelopers();
-      if (!user) {
-        this.showError('Desenvolvedor não cadastrado.', 1000);
-        return;
       }
     });
   }
@@ -85,9 +85,6 @@ export class AppComponent implements OnInit {
     this.isLoadingDevelopers = true;
     this.usersService.getUsers({ page: this.filteringDevelopersPage }).subscribe({
       next: (developers) => {
-
-        console.log({ developers })
-
         this.availableDevelopers = developers;
         this.filteringDevelopersList = developers;
       },

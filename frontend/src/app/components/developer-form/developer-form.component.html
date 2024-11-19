@@ -1,6 +1,7 @@
 <mat-card class="form__wrapper">
   <h3 class="form__heading">Cadastro de desenvolvedor</h3>
   <form class="form__content" [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <form-heading-feedback [formRef]="userForm" *ngIf="currentStep > 0" />
     <div class="form__stepContainer">
       <form-step-personal *ngIf="currentStep === 0"
         [formRef]="userForm"
@@ -8,8 +9,8 @@
         [partialProfile]="inheritAuthInfo"
         (autocompleteHandler)="autoCompleteHandler($event)"
       />
-      <form-step-github *ngIf="currentStep === 1" [formRef]="userForm"></form-step-github>
-      <form-step-experience *ngIf="currentStep === 2" [formRef]="userForm"></form-step-experience>
+      <form-step-github *ngIf="currentStep === 1" [formRef]="userForm" />
+      <form-step-experience *ngIf="currentStep === 2" [formRef]="userForm" />
     </div>
     <div class="form__bottomNavigation">
       <button

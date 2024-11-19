@@ -1,0 +1,15 @@
+.formFeedback__wrapper {
+  margin-bottom: 16px;
+
+  .formFeedback__fieldInfo {
+
+    .formFeedback__fieldInfoText {
+
+      &.formFeedback__fieldInfoText__key {
+        font-weight: bold;
+      }
+      &.formFeedback__fieldInfoText__value {}
+    }
+
+  }
+}

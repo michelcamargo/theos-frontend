@@ -20,13 +20,6 @@ import {MatInput} from '@angular/material/input';
 export class FormStepExperienceComponent {
   @Input({ required: true }) formRef!: FormGroup;
 
-  getFieldValue(field: string) {
-    const fieldControl = this.formRef.get(field)
-    return fieldControl?.value;
-  }
-
-  constructor() {
-    console.log({ previewValues: this.formRef })
-  }
+  constructor() {}
 
 }

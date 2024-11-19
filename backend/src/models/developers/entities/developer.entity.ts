@@ -6,9 +6,6 @@ export class DeveloperEntity {
   id: number;
 
   @Column()
-  githubUsername: string;
-
-  @Column()
   githubUrl: string;
 
   @Column()

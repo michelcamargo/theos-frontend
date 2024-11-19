@@ -1,0 +1,14 @@
+.form__stepWrapper {
+  .form__stepHeading {
+    margin-bottom: 16px;
+
+    .previousStep__feedback {
+      .previousStep__feedbackText {
+        &.previousStep__feedbackText__key {
+          font-weight: bold;
+        }
+      }
+    }
+
+  }
+}

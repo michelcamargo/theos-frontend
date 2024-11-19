@@ -2,10 +2,6 @@ import { IsEmail, IsNotEmpty, IsString, IsUrl } from 'class-validator';
 
 export class CreateDeveloperDto {
   @IsNotEmpty()
-  @IsString()
-  githubUsername: string;
-
-  @IsNotEmpty()
   @IsUrl()
   githubUrl: string;
 

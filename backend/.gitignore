@@ -59,3 +59,6 @@ cert
 
 # IDE Jetbrains
 .idea
+
+# Base de dados local
+dev.sqlite

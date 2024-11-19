@@ -32,10 +32,6 @@ export class UsersService {
   }
 
   getUsers(config?: CommonQueryListConfig): Observable<CustomUser[]> {
-    const users = this.http.get<CustomUser[]>(`${this.apiUrl}?page=${this.getConfig(config).page}`);
-
-    // console.log({ users:  })
-
-    return users;
+    return this.http.get<CustomUser[]>(`${this.apiUrl}?page=${this.getConfig(config).page}`);
   }
 }

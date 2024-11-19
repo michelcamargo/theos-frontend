@@ -46,7 +46,6 @@ export class FormStepPersonalComponent {
   }
 
   handleAutocompleteUpdate(event: FieldAutocompleteIndex): void {
-
     this.autocompleteHandler.emit(event)
   }
 

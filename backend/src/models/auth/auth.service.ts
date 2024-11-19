@@ -53,8 +53,6 @@ export class AuthService {
     try {
       const { access_token, token_type } = authConfig;
 
-      console.log({ tokenToFindUser: access_token });
-
       if (!access_token || !token_type) {
         return null;
       }
@@ -64,8 +62,6 @@ export class AuthService {
           Authorization: `${token_type} ${access_token}`,
         },
       });
-
-      console.log({ authConfig });
 
       return response.data;
     } catch (error) {

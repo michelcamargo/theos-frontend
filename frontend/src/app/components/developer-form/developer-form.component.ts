@@ -15,6 +15,8 @@ import { GithubService } from '../../services/github.service';
 import { debounceTime, distinctUntilChanged, filter, take } from 'rxjs';
 import { FieldAutocompleteIndex } from '../../types/form';
 import { UsersService } from '../../services/users.service';
+import ValidatorsHelper from '../../helpers/validators.helper';
+import {FormHeadingFeedbackComponent} from './form-heading-feedback/form-heading-feedback.component';
 
 @Component({
   selector: 'app-developer-form',
@@ -32,6 +34,7 @@ import { UsersService } from '../../services/users.service';
     FormStepExperienceComponent,
     NgIf,
     NgComponentOutlet,
+    FormHeadingFeedbackComponent,
   ],
   templateUrl: './developer-form.component.html',
   styleUrl: './developer-form.component.scss'
@@ -54,7 +57,7 @@ export class DeveloperFormComponent implements OnInit {
     {
       groupName: 'github',
       component: FormStepGithubComponent,
-      fields: ['githubUsername', 'avatarUrl'],
+      fields: ['githubUrl', 'avatarUrl'],
     },
     {
       groupName: 'experience',
@@ -73,18 +76,19 @@ export class DeveloperFormComponent implements OnInit {
   ) {
     const { partialProfile } = data;
 
-    if (partialProfile) { this.inheritAuthInfo = partialProfile }
+    if (partialProfile) {
+      this.inheritAuthInfo = partialProfile
+    }
 
     this.currentStep = 0;
     this.userForm = this.form.group({
       name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      githubUsername: ['', Validators.required],
-      githubUrl: ['', Validators.required],
-      avatarUrl: ['', [Validators.required]],
-      city: [''],
-      education: [''],
-      skills: ['']
+      email: ['', [Validators.required, ValidatorsHelper.email()]],
+      githubUrl: ['', [Validators.required, ValidatorsHelper.url()]],
+      avatarUrl: ['', [Validators.required, ValidatorsHelper.url()]],
+      city: ['', [Validators.required]],
+      education: ['', [Validators.required]],
+      skills: ['', [Validators.required]]
     });
   }
 
@@ -111,10 +115,7 @@ export class DeveloperFormComponent implements OnInit {
       if (nameValue) {
         this.githubService.searchUsers({ fullname: nameValue }, { page }).subscribe({
           next: (users) => {
-            if (!users || !users.length) {
-              console.log('> no users found.');
-              return;
-            }
+            if (!users || !users.length) return;
 
             this.suggestionUsers = users;
             console.log('Usuários encontrados:', users);
@@ -160,8 +161,6 @@ export class DeveloperFormComponent implements OnInit {
     }
 
     const validatorAlert = (errors: string[]) => {
-      console.log({validationErrors: errors });
-
       this.alert.open(`Preencha os campos obrigatórios para continuar ${errors}`, 'Fechar', {
         duration: 3000,
         panelClass: ['error-snackbar']
@@ -191,8 +190,6 @@ export class DeveloperFormComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log({ form: this.userForm, valid: this.userForm.valid, error: this.userForm.errors })
-
     if (this.userForm.valid) {
       const formData = this.userForm.value;
       const incomingUser: CustomUser = {
@@ -219,8 +216,6 @@ export class DeveloperFormComponent implements OnInit {
         complete: () => this.userForm.reset(),
       });
     } else {
-      console.log({ form: this.userForm, valid: this.userForm.valid, error: this.userForm.errors })
-
       this.alert.open('Campos obrigatórios não preenchidos.', 'Fechar', {
         duration: 3000,
         panelClass: ['error-snackbar']

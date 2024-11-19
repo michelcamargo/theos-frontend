@@ -1,5 +1,5 @@
 export interface CustomUser {
-  githubUsername: string;
+  githubUsername?: string;
   githubUrl: string;
   avatarUrl: string;
   name: string;

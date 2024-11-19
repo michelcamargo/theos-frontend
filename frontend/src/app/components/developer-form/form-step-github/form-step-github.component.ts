@@ -1,4 +1,4 @@
-import {Component, Inject, input, Input} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {MatError, MatFormField, MatLabel} from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import {FormGroup, ReactiveFormsModule} from '@angular/forms';
@@ -57,9 +57,6 @@ export class FormStepGithubComponent {
         this.formRef.get('avatarUrl')?.setValue(base64Image);
         this.formRef.get('avatarUrl')?.disable();
         this.formRef.get('avatarUrl')?.updateValueAndValidity();
-
-
-        console.log("Avatar URL is valid após update:", this.formRef.get('avatarUrl')?.valid);
       };
       reader.readAsDataURL(file);
     }
