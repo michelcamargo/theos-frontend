@@ -10,7 +10,7 @@ import { MatAutocomplete, MatAutocompleteTrigger, MatOption } from '@angular/mat
 import {
   NameAutocompleteFieldComponent
 } from '../name-autocomplete-field/name-autocomplete-field.component';
-import {FieldAutocompleteIndex} from '../../../types/form';
+import { FieldAutocompleteIndex } from '../../../types/form';
 
 @Component({
   selector: 'form-step-personal',
@@ -37,6 +37,7 @@ export class FormStepPersonalComponent {
   @Input({ required: true }) formRef!: FormGroup;
   @Input() partialProfile?: Partial<CustomUser>;
   @Input({ required: true }) isDebouncing: boolean = false;
+  @Input({ required: true }) autocompleteSuggestions: Partial<CustomUser>[] = [];
   @Output() autocompleteHandler: EventEmitter<FieldAutocompleteIndex> = new EventEmitter<FieldAutocompleteIndex>();
 
   constructor() {}

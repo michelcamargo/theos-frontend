@@ -4,7 +4,7 @@ import { MatIcon } from '@angular/material/icon';
 import { NgForOf, NgIf } from '@angular/common';
 import {MatFormField, MatLabel} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
-import {MatAutocomplete, MatOption} from '@angular/material/autocomplete';
+import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from '@angular/material/autocomplete';
 import {FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {FieldAutocompleteIndex} from '../../../types/form';
 import {LoadingFeedbackComponent} from '../../loading-feedback/loading-feedback.component';
@@ -26,7 +26,8 @@ import {LoadingFeedbackComponent} from '../../loading-feedback/loading-feedback.
     MatAutocomplete,
     MatOption,
     ReactiveFormsModule,
-    LoadingFeedbackComponent
+    LoadingFeedbackComponent,
+    MatAutocompleteTrigger
   ],
   templateUrl: './name-autocomplete-field.component.html',
   styleUrl: './name-autocomplete-field.component.scss'
