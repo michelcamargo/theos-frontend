@@ -4,9 +4,11 @@
 
     .previousStep__feedback {
       .previousStep__feedbackText {
-        &.previousStep__feedbackText__key {
-          font-weight: bold;
-        }
+
+      }
+
+      .previousStep__feedbackText__key {
+        font-weight: bold;
       }
     }
 
